@@ -30,9 +30,14 @@ Add the following to your Prism configuration (`config/prism.php`):
 'bedrock' => [ // Key should match Bedrock::KEY
     'api_key' => env('AWS_ACCESS_KEY_ID'),
     'api_secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'session_token' => env('AWS_SESSION_TOKEN'), // Optional
+    'use_default_credential_provider' => env('AWS_USE_DEFAULT_CREDENTIAL_PROVIDER', false),
     'region' => env('AWS_REGION', 'us-east-1')
 ],
 ```
+
+Enable `use_default_credential_provider` if you want to use the [AWS SDK default credential provider chain](https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_default_chain.html) which 
+checks multiple locations for credentials.
 
 ## Usage
 

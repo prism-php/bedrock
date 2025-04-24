@@ -24,8 +24,7 @@ class Bedrock implements Provider
     const KEY = 'bedrock';
 
     public function __construct(
-        #[\SensitiveParameter] protected string $apiKey,
-        #[\SensitiveParameter] protected string $apiSecret,
+        #[\SensitiveParameter] protected Credentials $credentials,
         protected string $region
     ) {}
 
@@ -141,10 +140,7 @@ class Bedrock implements Provider
 
                 $signature = new SignatureV4('bedrock', $this->region);
 
-                return $signature->signRequest($request, new Credentials(
-                    key: $this->apiKey,
-                    secret: $this->apiSecret
-                ));
+                return $signature->signRequest($request, $this->credentials);
             })
             ->throw();
     }
