@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace Prism\Bedrock\Schemas\Anthropic\Maps;
-
 use BackedEnum;
 use Exception;
 use InvalidArgumentException;
@@ -11,6 +10,7 @@ use Prism\Prism\Contracts\Message;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
+use Prism\Prism\ValueObjects\Messages\Support\Document;
 use Prism\Prism\ValueObjects\Messages\Support\Image;
 use Prism\Prism\ValueObjects\Messages\SystemMessage;
 use Prism\Prism\ValueObjects\Messages\ToolResultMessage;
@@ -102,10 +102,6 @@ class MessageMap
         $cacheType = data_get($providerMeta, 'cacheType', null);
         $cache_control = $cacheType ? ['type' => $cacheType instanceof BackedEnum ? $cacheType->value : $cacheType] : null;
 
-        if ($message->documents() !== []) {
-            throw new Exception('Documents are not yet supported by Anthropic on Bedrock.');
-        }
-
         return [
             'role' => 'user',
             'content' => [
@@ -115,6 +111,7 @@ class MessageMap
                     'cache_control' => $cache_control,
                 ]),
                 ...self::mapImageParts($message->images(), $cache_control),
+                ...self::mapDocumentParts($message->documents(), $cache_control, $providerMeta),
             ],
         ];
     }
@@ -130,15 +127,21 @@ class MessageMap
 
         $content = [];
 
+        if (isset($message->additionalContent['thinking']) && isset($message->additionalContent['thinking_signature'])) {
+            $content[] = [
+                'type' => 'thinking',
+                'thinking' => $message->additionalContent['thinking'],
+                'signature' => $message->additionalContent['thinking_signature'],
+            ];
+        }
+
         if (isset($message->additionalContent['messagePartsWithCitations'])) {
-            throw new Exception('Citations are not yet supported by Anthropic on Bedrock.');
-            // TODO: update once citation support is supported by Anthropic on Bedrock
-            // foreach ($message->additionalContent['messagePartsWithCitations'] as $part) {
-            //     $content[] = array_filter([
-            //         ...$part->toContentBlock(),
-            //         'cache_control' => $cacheType ? ['type' => $cacheType instanceof BackedEnum ? $cacheType->value : $cacheType] : null,
-            //     ]);
-            // }
+            foreach ($message->additionalContent['messagePartsWithCitations'] as $part) {
+                $content[] = array_filter([
+                    ...$part->toContentBlock(),
+                    'cache_control' => $cacheType ? ['type' => $cacheType instanceof BackedEnum ? $cacheType->value : $cacheType] : null,
+                ]);
+            }
         } elseif ($message->content !== '' && $message->content !== '0') {
 
             $content[] = array_filter([
@@ -183,6 +186,42 @@ class MessageMap
                     'data' => $image->image,
                 ],
                 'cache_control' => $cache_control,
+            ]);
+        }, $parts);
+    }
+
+    /**
+     * @param  Document[]  $parts
+     * @param  array<string, mixed>|null  $cache_control
+     * @param  array<string, mixed>  $requestProviderMeta
+     * @return array<int, mixed>
+     */
+    protected static function mapDocumentParts(array $parts, ?array $cache_control = null, array $requestProviderMeta = []): array
+    {
+
+        return array_map(function (Document $document) use ($cache_control, $requestProviderMeta): array {
+            if ($document->isUrl()) {
+                throw new InvalidArgumentException('URL document type is not supported by Anthropic');
+            }
+
+            return array_filter([
+                'type' => 'document',
+                'source' => array_filter([
+                    'type' => $document->dataFormat,
+                    'media_type' => $document->mimeType,
+                    'data' => $document->dataFormat !== 'content' && ! is_array($document->document)
+                        ? $document->document
+                        : null,
+                    'content' => $document->dataFormat === 'content' && is_array($document->document)
+                        ? array_map(fn (string $chunk): array => ['type' => 'text', 'text' => $chunk], $document->document)
+                        : null,
+                ]),
+                'title' => $document->documentTitle,
+                'context' => $document->documentContext,
+                'cache_control' => $cache_control,
+                'citations' => data_get($requestProviderMeta, 'citations', data_get($document->providerMeta(Provider::Anthropic), 'citations', false))
+                    ? ['enabled' => true]
+                    : null,
             ]);
         }, $parts);
     }
