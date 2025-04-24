@@ -26,7 +26,8 @@ class Bedrock implements Provider
     public function __construct(
         #[\SensitiveParameter] protected string $apiKey,
         #[\SensitiveParameter] protected string $apiSecret,
-        protected string $region
+        protected string $region,
+        #[\SensitiveParameter] protected ?string $sessionToken = null,
     ) {}
 
     #[\Override]
@@ -143,7 +144,8 @@ class Bedrock implements Provider
 
                 return $signature->signRequest($request, new Credentials(
                     key: $this->apiKey,
-                    secret: $this->apiSecret
+                    secret: $this->apiSecret,
+                    token: $this->sessionToken
                 ));
             })
             ->throw();

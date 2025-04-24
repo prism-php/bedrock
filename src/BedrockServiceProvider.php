@@ -16,6 +16,7 @@ class BedrockServiceProvider extends ServiceProvider
         $this->app->get('prism-manager')->extend(Bedrock::KEY, fn ($app, $config): \Prism\Bedrock\Bedrock => new Bedrock(
             apiKey: $config['api_key'],
             apiSecret: $config['api_secret'],
+            sessionToken: $config['session_token'] ?? null,
             region: $config['region']
         ));
     }
