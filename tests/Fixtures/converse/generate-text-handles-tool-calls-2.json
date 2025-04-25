@@ -1,0 +1,1 @@
+{"metrics":{"latencyMs":329},"output":{"message":{"content":[{"text":"The weather in Detroit today will be 75°F and sunny."}],"role":"assistant"}},"stopReason":"end_turn","usage":{"inputTokens":541,"outputTokens":15,"totalTokens":556}}

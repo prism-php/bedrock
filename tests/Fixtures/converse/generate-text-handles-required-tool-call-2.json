@@ -1,0 +1,1 @@
+{"metrics":{"latencyMs":433},"output":{"message":{"content":[{"text":"The weather in London, UK today will be 75°F and sunny. If you need any further information or assistance, feel free to ask!"}],"role":"assistant"}},"stopReason":"end_turn","usage":{"inputTokens":512,"outputTokens":31,"totalTokens":543}}

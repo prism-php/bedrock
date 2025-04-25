@@ -144,10 +144,10 @@ it('maps tool result messages', function (): void {
         'content' => [
             [
                 'toolResult' => [
-                    [
-                        'status' => 'success',
-                        'toolUseId' => 'tool_1234',
-                        'content' => '[search results]',
+                    'status' => 'success',
+                    'toolUseId' => 'tool_1234',
+                    'content' => [
+                        ['text' => '[search results]'],
                     ],
                 ],
             ],

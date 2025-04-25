@@ -86,15 +86,17 @@ class MessageMap
     {
         return [
             'role' => 'user',
-            'content' => [
-                [
-                    'toolResult' => array_map(fn (ToolResult $toolResult): array => [
-                        'status' => $toolResult->result !== null ? 'success' : 'error',
-                        'toolUseId' => $toolResult->toolCallId,
-                        'content' => $toolResult->result,
-                    ], $message->toolResults),
+            'content' => array_map(fn (ToolResult $toolResult): array => [
+                'toolResult' => [
+                    'status' => $toolResult->result !== null ? 'success' : 'error',
+                    'toolUseId' => $toolResult->toolCallId,
+                    'content' => [
+                        [
+                            'text' => $toolResult->result,
+                        ],
+                    ],
                 ],
-            ],
+            ], $message->toolResults),
         ];
     }
 
@@ -125,11 +127,11 @@ class MessageMap
 
         return [
             'role' => 'assistant',
-            'content' => array_filter([
-                ['text' => $message->content],
+            'content' => array_values(array_filter([
+                $message->content === '' || $message->content === '0' ? null : ['text' => $message->content],
                 ...self::mapToolCalls($message->toolCalls),
                 $cacheType ? ['cachePoint' => ['type' => $cacheType]] : null,
-            ]),
+            ])),
         ];
     }
 

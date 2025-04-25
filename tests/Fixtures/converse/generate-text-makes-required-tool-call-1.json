@@ -1,0 +1,1 @@
+{"metrics":{"latencyMs":267},"output":{"message":{"content":[{"toolUse":{"input":{"city":"London, UK"},"name":"weather","toolUseId":"tooluse_wX6sIcn-TFGXVQ0JUh_B-A"}}],"role":"assistant"}},"stopReason":"tool_use","usage":{"inputTokens":469,"outputTokens":18,"totalTokens":487}}

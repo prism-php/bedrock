@@ -68,7 +68,7 @@ class ConverseTextHandler extends BedrockTextHandler
     /**
      * @return array<string,mixed>
      */
-    public static function buildPayload(Request $request): array
+    public static function buildPayload(Request $request, int $stepCount = 0): array
     {
         return array_filter([
             'inferenceConfig' => array_filter([
@@ -82,7 +82,7 @@ class ConverseTextHandler extends BedrockTextHandler
                 ? null
                 : array_filter([
                     'tools' => ToolMap::map($request->tools()),
-                    'toolChoice' => ToolChoiceMap::map($request->toolChoice()),
+                    'toolChoice' => $stepCount === 0 ? ToolChoiceMap::map($request->toolChoice()) : null,
                 ]),
         ]);
     }
@@ -92,7 +92,7 @@ class ConverseTextHandler extends BedrockTextHandler
         try {
             $this->httpResponse = $this->client->post(
                 'converse',
-                static::buildPayload($request)
+                static::buildPayload($request, $this->responseBuilder->steps->count())
             );
         } catch (Throwable $e) {
             throw PrismException::providerRequestError($request->model(), $e);
