@@ -13,6 +13,9 @@ class BedrockServiceProvider extends ServiceProvider
         $this->registerWithPrism();
     }
 
+    /**
+     * @param  array<string,mixed>  $config
+     */
     public static function getCredentials(array $config): Credentials
     {
         if ($config['use_default_credential_provider'] ?? false) {
