@@ -18,7 +18,7 @@ it('throws an exception for embeddings with Anthropic apiSchema', function (): v
 
     Prism::embeddings()
         ->using('bedrock', 'test-model')
-        ->withProviderMeta('bedrock', ['apiSchema' => BedrockSchema::Anthropic])
+        ->withProviderOptions(['apiSchema' => BedrockSchema::Anthropic])
         ->fromInput('Hello world')
         ->asEmbeddings();
 })->throws(PrismException::class, 'Prism Bedrock does not support embeddings for the anthropic apiSchema.');

@@ -137,7 +137,7 @@ Prism Bedrock resolves the most appropriate API schema from the model string. If
 
 Therefore if you use a model that is not supported by AWS Bedrock Converse, and does not have a specific Prism Bedrock implementation, your request will fail.
 
-If you wish to force Prism Bedrock to use Converse instead of a vendor specific interface, you can do so with `withProviderMeta()`:
+If you wish to force Prism Bedrock to use Converse instead of a vendor specific interface, you can do so with `withProviderOptions()`:
 
 ```php
 use Prism\Prism\Prism;
@@ -146,7 +146,7 @@ use Prism\Bedrock\Enums\BedrockSchema;
 
 $response = Prism::text()
     ->using(Bedrock::KEY, 'anthropic.claude-3-sonnet-20240229-v1:0')
-    ->withProviderMeta(Bedrock::KEY, ['apiSchema' => BedrockSchema::Converse])
+    ->withProviderOptions(['apiSchema' => BedrockSchema::Converse])
     ->withPrompt('Explain quantum computing in simple terms')
     ->asText();
 
@@ -164,8 +164,8 @@ use Prism\Prism\ValueObjects\Messages\UserMessage;
 $response = Prism::text()
     ->using(Bedrock::KEY, 'anthropic.claude-3-sonnet-20240229-v1:0')
     ->withMessages([
-        (new UserMessage('Message with cache breakpoint'))->withProviderMeta('bedrock', ['cacheType' => 'ephemeral']),
-        (new UserMessage('Message with another cache breakpoint'))->withProviderMeta('bedrock', ['cacheType' => 'ephemeral']),
+        (new UserMessage('Message with cache breakpoint'))->withProviderOptions(['cacheType' => 'ephemeral']),
+        (new UserMessage('Message with another cache breakpoint'))->withProviderOptions(['cacheType' => 'ephemeral']),
         new UserMessage('Compare the last two messages.')
     ])
     ->asText();
