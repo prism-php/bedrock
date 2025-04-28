@@ -158,7 +158,7 @@ it('maps system messages', function (): void {
     ]);
 });
 
-it('sets the cache type on a UserMessage if cacheType providerMeta is set on message', function (mixed $cacheType): void {
+it('sets the cache type on a UserMessage if cacheType providerOptions is set on message', function (mixed $cacheType): void {
     expect(MessageMap::map([
         (new UserMessage(content: 'Who are you?'))->withProviderMeta(Provider::Anthropic, ['cacheType' => $cacheType]),
     ]))->toBe([[
@@ -176,7 +176,7 @@ it('sets the cache type on a UserMessage if cacheType providerMeta is set on mes
     AnthropicCacheType::Ephemeral,
 ]);
 
-it('sets the cache type on a UserMessage image if cacheType providerMeta is set on message', function (): void {
+it('sets the cache type on a UserMessage image if cacheType providerOptions is set on message', function (): void {
     expect(MessageMap::map([
         (new UserMessage(
             content: 'Who are you?',
@@ -203,7 +203,7 @@ it('sets the cache type on a UserMessage image if cacheType providerMeta is set 
     ]]);
 });
 
-it('sets the cache type on an AssistantMessage if cacheType providerMeta is set on message', function (mixed $cacheType): void {
+it('sets the cache type on an AssistantMessage if cacheType providerOptions is set on message', function (mixed $cacheType): void {
     expect(MessageMap::map([
         (new AssistantMessage(content: 'Who are you?'))->withProviderMeta(Provider::Anthropic, ['cacheType' => $cacheType]),
     ]))->toBe([[
@@ -221,7 +221,7 @@ it('sets the cache type on an AssistantMessage if cacheType providerMeta is set 
     AnthropicCacheType::Ephemeral,
 ]);
 
-it('sets the cache type on a SystemMessage if cacheType providerMeta is set on message', function (mixed $cacheType): void {
+it('sets the cache type on a SystemMessage if cacheType providerOptions is set on message', function (mixed $cacheType): void {
     expect(MessageMap::mapSystemMessages([
         (new SystemMessage(content: 'Who are you?'))->withProviderMeta(Provider::Anthropic, ['cacheType' => $cacheType]),
     ]))->toBe([

@@ -32,7 +32,7 @@ it('maps tools', function (): void {
     ]]);
 });
 
-it('sets the cache typeif cacheType providerMeta is set on tool', function (mixed $cacheType): void {
+it('sets the cache typeif cacheType providerOptions is set on tool', function (mixed $cacheType): void {
     $tool = (new Tool)
         ->as('search')
         ->for('Searching the web')

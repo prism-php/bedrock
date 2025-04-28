@@ -105,7 +105,7 @@ class Bedrock implements Provider
 
     public function schema(PrismRequest $request): BedrockSchema
     {
-        $override = $request->providerMeta('bedrock');
+        $override = $request->providerOptions();
 
         $override = data_get($override, 'apiSchema', null);
 
@@ -127,7 +127,7 @@ class Bedrock implements Provider
 
         $enableCaching = $request instanceof EmbeddingRequest
             ? false
-            : $request->providerMeta('bedrock', 'enableCaching') ?? false;
+            : $request->providerOptions('enableCaching') ?? false;
 
         return Http::acceptJson()
             ->withHeader('explicitPromptCaching', $enableCaching ? 'enabled' : 'disabled')
