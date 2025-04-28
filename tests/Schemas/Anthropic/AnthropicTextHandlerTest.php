@@ -4,7 +4,6 @@ namespace Tests\Schemas\Anthropic;
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
-use Prism\Prism\Enums\Provider;
 use Prism\Prism\Facades\Tool;
 use Prism\Prism\Prism;
 use Prism\Prism\ValueObjects\Messages\Support\Image;
@@ -162,9 +161,9 @@ it('can calculate cache usage correctly', function (): void {
 
     $response = Prism::text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
-        ->withSystemPrompt(new SystemMessage('Old context'))->withProviderMeta(Provider::Anthropic, ['cacheType' => 'ephemeral'])
+        ->withSystemPrompt(new SystemMessage('Old context'))->withProviderOptions(['cacheType' => 'ephemeral'])
         ->withMessages([
-            (new UserMessage('New context'))->withProviderMeta(Provider::Anthropic, ['cacheType' => 'ephemeral']),
+            (new UserMessage('New context'))->withProviderOptions(['cacheType' => 'ephemeral']),
         ])
         ->asText();
 
@@ -188,7 +187,7 @@ it('enables prompt caching if the enableCaching provider meta is set on the requ
 
     Prism::text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
-        ->withProviderMeta('bedrock', ['enableCaching' => true])
+        ->withProviderOptions(['enableCaching' => true])
         ->withPrompt('Who are you?')
         ->asText();
 

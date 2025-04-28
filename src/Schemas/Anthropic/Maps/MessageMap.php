@@ -8,7 +8,6 @@ use BackedEnum;
 use Exception;
 use InvalidArgumentException;
 use Prism\Prism\Contracts\Message;
-use Prism\Prism\Enums\Provider;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
 use Prism\Prism\ValueObjects\Messages\Support\Image;
@@ -66,9 +65,7 @@ class MessageMap
      */
     protected static function mapSystemMessage(SystemMessage $systemMessage): array
     {
-        $providerMeta = array_merge($systemMessage->providerMeta('bedrock'), $systemMessage->providerMeta(Provider::Anthropic));
-
-        $cacheType = data_get($providerMeta, 'cacheType', null);
+        $cacheType = $systemMessage->providerOptions('cacheType');
 
         return array_filter([
             'type' => 'text',
@@ -97,9 +94,7 @@ class MessageMap
      */
     protected static function mapUserMessage(UserMessage $message): array
     {
-        $providerMeta = array_merge($message->providerMeta('bedrock'), $message->providerMeta(Provider::Anthropic));
-
-        $cacheType = data_get($providerMeta, 'cacheType', null);
+        $cacheType = $message->providerOptions('cacheType');
         $cache_control = $cacheType ? ['type' => $cacheType instanceof BackedEnum ? $cacheType->value : $cacheType] : null;
 
         if ($message->documents() !== []) {
@@ -124,9 +119,7 @@ class MessageMap
      */
     protected static function mapAssistantMessage(AssistantMessage $message): array
     {
-        $providerMeta = array_merge($message->providerMeta('bedrock'), $message->providerMeta(Provider::Anthropic));
-
-        $cacheType = data_get($providerMeta, 'cacheType', null);
+        $cacheType = $message->providerOptions('cacheType');
 
         $content = [];
 

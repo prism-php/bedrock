@@ -47,7 +47,7 @@ class MessageMap
         foreach ($systemPrompts as $prompt) {
             $output[] = self::mapSystemMessage($prompt);
 
-            $cacheType = data_get($prompt->providerMeta('bedrock'), 'cacheType', null);
+            $cacheType = $prompt->providerOptions('cacheType');
 
             if ($cacheType) {
                 $output[] = ['cachePoint' => ['type' => $cacheType]];
@@ -105,7 +105,7 @@ class MessageMap
      */
     protected static function mapUserMessage(UserMessage $message): array
     {
-        $cacheType = data_get($message->providerMeta('bedrock'), 'cacheType', null);
+        $cacheType = $message->providerOptions('cacheType');
 
         return [
             'role' => 'user',
@@ -123,7 +123,7 @@ class MessageMap
      */
     protected static function mapAssistantMessage(AssistantMessage $message): array
     {
-        $cacheType = data_get($message->providerMeta('bedrock'), 'cacheType', null);
+        $cacheType = $message->providerOptions('cacheType');
 
         return [
             'role' => 'assistant',

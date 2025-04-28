@@ -157,7 +157,7 @@ it('maps tool result messages', function (): void {
 
 it('maps user messages with a cache breakpoint correctly', function (): void {
     expect(MessageMap::map([
-        (new UserMessage('Who are you?'))->withProviderMeta('bedrock', ['cacheType' => 'default']),
+        (new UserMessage('Who are you?'))->withProviderOptions(['cacheType' => 'default']),
     ]))->toBe([[
         'role' => 'user',
         'content' => [
@@ -173,7 +173,7 @@ it('maps user messages with a cache breakpoint correctly', function (): void {
 
 it('maps assistant messages with a cache breakpoint correctly', function (): void {
     expect(MessageMap::map([
-        (new AssistantMessage('I am Thanos'))->withProviderMeta('bedrock', ['cacheType' => 'default']),
+        (new AssistantMessage('I am Thanos'))->withProviderOptions(['cacheType' => 'default']),
     ]))->toBe([[
         'role' => 'assistant',
         'content' => [
@@ -189,7 +189,7 @@ it('maps assistant messages with a cache breakpoint correctly', function (): voi
 
 it('maps system messages with a cache breakpoint correctly', function (): void {
     expect(MessageMap::mapSystemMessages([
-        (new SystemMessage('The answer to life is 42.'))->withProviderMeta('bedrock', ['cacheType' => 'default']),
+        (new SystemMessage('The answer to life is 42.'))->withProviderOptions(['cacheType' => 'default']),
         (new SystemMessage('Convert any numbers in your answer to their word format.')),
     ]))->toBe([
         [

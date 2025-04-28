@@ -6,7 +6,6 @@ namespace Tests\Schemas\Anthropic\Maps;
 
 use InvalidArgumentException;
 use Prism\Bedrock\Schemas\Anthropic\Maps\MessageMap;
-use Prism\Prism\Enums\Provider;
 use Prism\Prism\Providers\Anthropic\Enums\AnthropicCacheType;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
 use Prism\Prism\ValueObjects\Messages\Support\Image;
@@ -160,7 +159,7 @@ it('maps system messages', function (): void {
 
 it('sets the cache type on a UserMessage if cacheType providerMeta is set on message', function (mixed $cacheType): void {
     expect(MessageMap::map([
-        (new UserMessage(content: 'Who are you?'))->withProviderMeta(Provider::Anthropic, ['cacheType' => $cacheType]),
+        (new UserMessage(content: 'Who are you?'))->withProviderOptions(['cacheType' => $cacheType]),
     ]))->toBe([[
         'role' => 'user',
         'content' => [
@@ -181,7 +180,7 @@ it('sets the cache type on a UserMessage image if cacheType providerMeta is set 
         (new UserMessage(
             content: 'Who are you?',
             additionalContent: [Image::fromPath('tests/Fixtures/test-image.png')]
-        ))->withProviderMeta(Provider::Anthropic, ['cacheType' => 'ephemeral']),
+        ))->withProviderOptions(['cacheType' => 'ephemeral']),
     ]))->toBe([[
         'role' => 'user',
         'content' => [
@@ -205,7 +204,7 @@ it('sets the cache type on a UserMessage image if cacheType providerMeta is set 
 
 it('sets the cache type on an AssistantMessage if cacheType providerMeta is set on message', function (mixed $cacheType): void {
     expect(MessageMap::map([
-        (new AssistantMessage(content: 'Who are you?'))->withProviderMeta(Provider::Anthropic, ['cacheType' => $cacheType]),
+        (new AssistantMessage(content: 'Who are you?'))->withProviderOptions(['cacheType' => $cacheType]),
     ]))->toBe([[
         'role' => 'assistant',
         'content' => [
@@ -223,7 +222,7 @@ it('sets the cache type on an AssistantMessage if cacheType providerMeta is set 
 
 it('sets the cache type on a SystemMessage if cacheType providerMeta is set on message', function (mixed $cacheType): void {
     expect(MessageMap::mapSystemMessages([
-        (new SystemMessage(content: 'Who are you?'))->withProviderMeta(Provider::Anthropic, ['cacheType' => $cacheType]),
+        (new SystemMessage(content: 'Who are you?'))->withProviderOptions(['cacheType' => $cacheType]),
     ]))->toBe([
         [
             'type' => 'text',

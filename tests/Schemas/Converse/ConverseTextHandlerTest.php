@@ -96,7 +96,7 @@ it('can send images from file', function (): void {
 
     $response = Prism::text()
         ->using('bedrock', 'anthropic.claude-3-5-sonnet-20241022-v2:0')
-        ->withProviderMeta('bedrock', ['apiSchema' => BedrockSchema::Converse])
+        ->withProviderOptions(['apiSchema' => BedrockSchema::Converse])
         ->withMessages([
             new UserMessage(
                 'What is this image',
@@ -239,7 +239,7 @@ it('enables prompt caching if the enableCaching provider meta is set on the requ
 
     Prism::text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
-        ->withProviderMeta('bedrock', ['enableCaching' => true])
+        ->withProviderOptions(['enableCaching' => true])
         ->withPrompt('Who are you?')
         ->asText();
 
