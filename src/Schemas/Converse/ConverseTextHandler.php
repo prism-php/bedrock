@@ -71,12 +71,18 @@ class ConverseTextHandler extends BedrockTextHandler
     public static function buildPayload(Request $request, int $stepCount = 0): array
     {
         return array_filter([
+            'additionalModelRequestFields' => $request->providerOptions('additionalModelRequestFields'),
+            'additionalModelResponseFieldPaths' => $request->providerOptions('additionalModelResponseFieldPaths'),
+            'guardrailConfig' => $request->providerOptions('guardrailConfig'),
             'inferenceConfig' => array_filter([
                 'maxTokens' => $request->maxTokens(),
                 'temperature' => $request->temperature(),
                 'topP' => $request->topP(),
             ]),
             'messages' => MessageMap::map($request->messages()),
+            'performanceConfig' => $request->providerOptions('performanceConfig'),
+            'promptVariables' => $request->providerOptions('promptVariables'),
+            'requestMetadata' => $request->providerOptions('requestMetadata'),
             'system' => MessageMap::mapSystemMessages($request->systemPrompts()),
             'toolConfig' => $request->tools() === []
                 ? null
