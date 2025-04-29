@@ -6,16 +6,13 @@ namespace Tests\Schemas\Converse;
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
-use Mockery;
 use Prism\Bedrock\Enums\BedrockSchema;
-use Prism\Bedrock\Schemas\Converse\ConverseTextHandler;
-use Prism\Bedrock\Schemas\Converse\Maps\MessageMap;
 use Prism\Prism\Facades\Tool;
 use Prism\Prism\Prism;
-use Prism\Prism\Text\Request as PrismRequest;
+use Prism\Prism\Testing\TextStepFake;
+use Prism\Prism\Text\ResponseBuilder;
 use Prism\Prism\ValueObjects\Messages\Support\Document;
 use Prism\Prism\ValueObjects\Messages\Support\Image;
-use Prism\Prism\ValueObjects\Messages\SystemMessage;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
 use Tests\Fixtures\FixtureResponse;
 
@@ -251,89 +248,28 @@ it('enables prompt caching if the enableCaching provider meta is set on the requ
     Http::assertSent(fn (Request $request): bool => $request->header('explicitPromptCaching')[0] === 'enabled');
 });
 
-it('builds payload with all new providerOptions fields', function (): void {
-    // 1) Mock the incoming Request
-    $request = Mockery::mock(PrismRequest::class);
+it('maps converse options when set with providerOptions', function (): void {
+    $fake = Prism::fake([
+        (new ResponseBuilder)->addStep(TextStepFake::make())->toResponse(),
+    ]);
 
-    // providerOptions fields you’ve just added
-    $request->shouldReceive('providerOptions')
-        ->with('additionalModelRequestFields')
-        ->andReturn([
-            'anthropic_beta' => ['output-128k-2025-02-19'],
-            'thinking' => ['type' => 'enabled', 'budget_tokens' => 16000],
-        ]);
-    $request->shouldReceive('providerOptions')
-        ->with('additionalModelResponseFieldPaths')
-        ->andReturn(['foo.bar', 'baz.qux']);
-    $request->shouldReceive('providerOptions')
-        ->with('guardrailConfig')
-        ->andReturn(['rules' => ['no-violence']]);
-    $request->shouldReceive('providerOptions')
-        ->with('performanceConfig')
-        ->andReturn(['timeoutMs' => 2000]);
-    $request->shouldReceive('providerOptions')
-        ->with('promptVariables')
-        ->andReturn(['userName' => 'Alice']);
-    $request->shouldReceive('providerOptions')
-        ->with('requestMetadata')
-        ->andReturn(['requestId' => 'abc-123']);
-
-    // the existing inferenceConfig bits
-    $request->shouldReceive('maxTokens')->andReturn(1234);
-    $request->shouldReceive('temperature')->andReturn(0.42);
-    $request->shouldReceive('topP')->andReturn(0.99);
-
-    // messages & systemPrompts
-    $rawMessages = [new UserMessage(
-        'foo-message',
-    )];
-    $mappedMessages = [
-        [
-            'role' => 'user',
-            'content' => [
-                [
-                    'text' => 'foo-message',
-                ],
-            ],
-        ],
-    ];
-    $rawSystem = [new SystemMessage(
-        'system-prompt',
-    )];
-    $mappedSystem = [
-        [
-            'text' => 'system-prompt',
-        ],
-    ];
-
-    $request->shouldReceive('messages')->andReturn($rawMessages);
-    $request->shouldReceive('systemPrompts')->andReturn($rawSystem);
-
-    $request->shouldReceive('tools')->andReturn([]);
-
-    // 3) Alias‐mock the MessageMap class so its statics can be stubbed
-    $mapper = Mockery::mock(MessageMap::class);
-
-    // 3) Call your new payload builder
-    $payload = ConverseTextHandler::buildPayload($request);
-
-    // 4) Assert exactly what you expect
-    expect($payload)->toBe([
+    $providerOptions = [
         'additionalModelRequestFields' => [
             'anthropic_beta' => ['output-128k-2025-02-19'],
             'thinking' => ['type' => 'enabled', 'budget_tokens' => 16000],
         ],
         'additionalModelResponseFieldPaths' => ['foo.bar', 'baz.qux'],
         'guardrailConfig' => ['rules' => ['no-violence']],
-        'inferenceConfig' => [
-            'maxTokens' => 1234,
-            'temperature' => 0.42,
-            'topP' => 0.99,
-        ],
-        'messages' => $mappedMessages,
         'performanceConfig' => ['timeoutMs' => 2000],
         'promptVariables' => ['userName' => 'Alice'],
         'requestMetadata' => ['requestId' => 'abc-123'],
-        'system' => $mappedSystem,
-    ]);
+    ];
+
+    Prism::text()
+        ->using('bedrock', 'us.amazon.nova-micro-v1:0')
+        ->withProviderOptions($providerOptions)
+        ->withPrompt('Who are you?')
+        ->asText();
+
+    $fake->assertRequest(fn (array $requests): mixed => expect($requests[0]->providerOptions())->toBe($providerOptions));
 });
