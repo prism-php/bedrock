@@ -79,7 +79,7 @@ class AnthropicStructuredHandler extends BedrockStructuredHandler
             'system' => MessageMap::mapSystemMessages($request->systemPrompts()),
             'temperature' => $request->temperature(),
             'top_p' => $request->topP(),
-        ]);
+        ], fn ($value): bool => $value !== null);
     }
 
     protected function sendRequest(Request $request): void
