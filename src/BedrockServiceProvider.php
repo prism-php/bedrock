@@ -5,6 +5,7 @@ namespace Prism\Bedrock;
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;
 use Illuminate\Support\ServiceProvider;
+use Prism\Prism\PrismManager;
 
 class BedrockServiceProvider extends ServiceProvider
 {
@@ -33,9 +34,13 @@ class BedrockServiceProvider extends ServiceProvider
 
     protected function registerWithPrism(): void
     {
-        $this->app->get('prism-manager')->extend(Bedrock::KEY, fn ($app, $config): \Prism\Bedrock\Bedrock => new Bedrock(
-            credentials: BedrockServiceProvider::getCredentials($config),
-            region: $config['region']
-        ));
+        $this->app->extend(PrismManager::class, function (PrismManager $prismManager): \Prism\Prism\PrismManager {
+            $prismManager->extend(Bedrock::KEY, fn ($app, $config): Bedrock => new Bedrock(
+                credentials: BedrockServiceProvider::getCredentials($config),
+                region: $config['region']
+            ));
+
+            return $prismManager;
+        });
     }
 }
