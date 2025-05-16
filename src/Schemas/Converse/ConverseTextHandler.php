@@ -75,7 +75,7 @@ class ConverseTextHandler extends BedrockTextHandler
                 'maxTokens' => $request->maxTokens(),
                 'temperature' => $request->temperature(),
                 'topP' => $request->topP(),
-            ]),
+            ], fn ($value): bool => $value !== null),
             'messages' => MessageMap::map($request->messages()),
             'system' => MessageMap::mapSystemMessages($request->systemPrompts()),
             'toolConfig' => $request->tools() === []

@@ -80,7 +80,7 @@ class AnthropicTextHandler extends BedrockTextHandler
             'top_p' => $request->topP(),
             'tools' => ToolMap::map($request->tools()),
             'tool_choice' => ToolChoiceMap::map($request->toolChoice()),
-        ]);
+        ], fn ($value): bool => $value !== null);
     }
 
     protected function sendRequest(Request $request): void
