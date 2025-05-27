@@ -63,6 +63,14 @@ enum BedrockSchema: string
 
     public static function fromModelString(string $string): self
     {
-        return self::tryFrom(Str::before($string, '.')) ?? self::Converse;
+        if (Str::contains($string, 'anthropic.')) {
+            return self::Anthropic;
+        }
+
+        if (Str::contains($string, 'cohere.')) {
+            return self::Cohere;
+        }
+
+        return self::Converse;
     }
 }
