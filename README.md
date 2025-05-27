@@ -109,6 +109,21 @@ $response = Prism::embeddings()
 $embeddings = $response->embeddings;
 ```
 
+### Model names
+
+> [!IMPORTANT]
+> When using inference profiles via an ARN, you should urlencode the model name.
+
+```php
+use Prism\Prism\Prism;
+use Prism\Bedrock\Bedrock;
+
+$response = Prism::text()
+    ->using(Bedrock::KEY, urlencode('arn:aws:bedrock:us-east-1:999999999999:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0'))
+    ->withPrompt('Explain quantum computing in simple terms')
+    ->asText();
+```
+
 ## Supported API Schemas
 
 AWS Bedrock supports several API schemas - some LLM vendor specific, some generic.
