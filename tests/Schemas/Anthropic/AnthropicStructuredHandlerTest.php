@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Schemas\Anthropic;
 
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
 use Prism\Prism\Prism;
 use Prism\Prism\Schema\BooleanSchema;
 use Prism\Prism\Schema\ObjectSchema;
@@ -40,4 +42,33 @@ it('returns structured output', function (): void {
     expect($response->structured['weather'])->toBeString();
     expect($response->structured['game_time'])->toBeString();
     expect($response->structured['coat_required'])->toBeBool();
+});
+
+it('does not remove 0 values from payloads', function (): void {
+    FixtureResponse::fakeResponseSequence('invoke', 'anthropic/structured');
+
+    $schema = new ObjectSchema(
+        'output',
+        'the output object',
+        [
+            new StringSchema('weather', 'The weather forecast'),
+            new StringSchema('game_time', 'The tigers game time'),
+            new BooleanSchema('coat_required', 'whether a coat is required'),
+        ],
+        ['weather', 'game_time', 'coat_required']
+    );
+
+    Prism::structured()
+        ->withSchema($schema)
+        ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
+        ->withProviderOptions([
+            'guardRailConfig' => null,
+        ])
+        ->withMaxTokens(2048)
+        ->usingTemperature(0)
+        ->asStructured();
+
+    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation|\Pest\Expectation => expect($request->data())->toMatchArray([
+        'temperature' => 0,
+    ]));
 });

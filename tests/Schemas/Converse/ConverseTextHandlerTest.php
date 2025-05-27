@@ -273,3 +273,20 @@ it('maps converse options when set with providerOptions', function (): void {
 
     $fake->assertRequest(fn (array $requests): mixed => expect($requests[0]->providerOptions())->toBe($providerOptions));
 });
+
+it('does not remove zero values from payload', function (): void {
+    FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-a-prompt');
+
+    Prism::text()
+        ->using('bedrock', 'amazon.nova-micro-v1:0')
+        ->withPrompt('Who are you?')
+        ->usingTemperature(0)
+        ->asText();
+
+    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation|\Pest\Expectation => expect($request->data())->toMatchArray([
+        'inferenceConfig' => [
+            'temperature' => 0,
+            'maxTokens' => 2048,
+        ],
+    ]));
+});

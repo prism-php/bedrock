@@ -193,3 +193,17 @@ it('enables prompt caching if the enableCaching provider meta is set on the requ
 
     Http::assertSent(fn (Request $request): bool => $request->header('explicitPromptCaching')[0] === 'enabled');
 });
+
+it('does not remove 0 values from payloads', function (): void {
+    FixtureResponse::fakeResponseSequence('invoke', 'anthropic/generate-text-with-a-prompt');
+
+    Prism::text()
+        ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
+        ->withPrompt('Who are you?')
+        ->usingTemperature(0)
+        ->asText();
+
+    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation|\Pest\Expectation => expect($request->data())->toMatchArray([
+        'temperature' => 0,
+    ]));
+});
