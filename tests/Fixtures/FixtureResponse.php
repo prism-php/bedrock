@@ -80,7 +80,7 @@ class FixtureResponse
         }
 
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $events = array_map(fn ($line): mixed => json_decode((string) $line, true), $lines);
+        $events = array_map(fn ($line): mixed => json_decode($line, true), $lines);
 
         return new Result([
             'stream' => new ArrayIterator($events),
