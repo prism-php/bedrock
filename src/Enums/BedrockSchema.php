@@ -9,8 +9,10 @@ use Prism\Bedrock\Contracts\BedrockTextHandler;
 use Prism\Bedrock\Schemas\Anthropic\AnthropicStructuredHandler;
 use Prism\Bedrock\Schemas\Anthropic\AnthropicTextHandler;
 use Prism\Bedrock\Schemas\Cohere\CohereEmbeddingsHandler;
+use Prism\Bedrock\Schemas\Converse\ConverseStreamHandler;
 use Prism\Bedrock\Schemas\Converse\ConverseStructuredHandler;
 use Prism\Bedrock\Schemas\Converse\ConverseTextHandler;
+use Prism\Prism\Exceptions\PrismException;
 
 enum BedrockSchema: string
 {
@@ -27,6 +29,17 @@ enum BedrockSchema: string
             self::Anthropic => AnthropicTextHandler::class,
             self::Converse => ConverseTextHandler::class,
             default => null
+        };
+    }
+
+    /**
+     * @return null|class-string<ConverseStreamHandler>
+     */
+    public function streamHandler(): ?string
+    {
+        return match ($this) {
+            self::Converse => ConverseStreamHandler::class,
+            default => throw new PrismException('Prism Bedrock only supports streaming for Converse.'),
         };
     }
 

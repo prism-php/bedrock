@@ -2,6 +2,7 @@
 
 namespace Prism\Bedrock;
 
+use Aws\BedrockRuntime\BedrockRuntimeClient;
 use Aws\Credentials\Credentials;
 use Aws\Signature\SignatureV4;
 use Generator;
@@ -16,6 +17,7 @@ use Prism\Prism\Embeddings\Response as EmbeddingsResponse;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Structured\Request as StructuredRequest;
 use Prism\Prism\Structured\Response as StructuredResponse;
+use Prism\Prism\Text\Chunk;
 use Prism\Prism\Text\Request as TextRequest;
 use Prism\Prism\Text\Response as TextResponse;
 
@@ -100,7 +102,15 @@ class Bedrock implements Provider
      */
     public function stream(TextRequest $request): Generator
     {
-        throw new PrismException('Prism Bedrock does not support streaming yet.');
+        $schema = BedrockSchema::Converse;
+
+        $handler = $schema->streamHandler();
+
+        $client = $this->bedrockClient();
+
+        $handler = new $handler($this, $client);
+
+        return $handler->handle($request);
     }
 
     public function schema(PrismRequest $request): BedrockSchema
@@ -115,6 +125,11 @@ class Bedrock implements Provider
     public function apiVersion(PrismRequest $request): ?string
     {
         return $this->schema($request)->defaultApiVersion();
+    }
+
+    protected function bedrockClient(): BedrockRuntimeClient
+    {
+        return app(BedrockClientFactory::class)->make();
     }
 
     /**
