@@ -43,4 +43,9 @@ class BedrockServiceProvider extends ServiceProvider
             return $prismManager;
         });
     }
+
+    protected function registerBedrockClient(): void
+    {
+        $this->app->singleton(BedrockClientFactory::class, fn (): \Prism\Bedrock\BedrockClientFactory => new BedrockClientFactory);
+    }
 }
