@@ -163,8 +163,8 @@ class MessageMap
 
             return [
                 'image' => [
-                    'format' => Mimes::tryFrom($image->mimeType)?->toExtension(), // @phpstan-ignore argument.type
-                    'source' => ['bytes' => $image->image],
+                    'format' => Mimes::tryFrom($image->mimeType())?->toExtension(), // @phpstan-ignore argument.type
+                    'source' => ['bytes' => $image->base64()],
                 ],
             ];
         }, $parts);
@@ -177,15 +177,11 @@ class MessageMap
     protected static function mapDocumentParts(array $parts): array
     {
         return array_map(function (Document $document): array {
-            if ($document->dataFormat === 'content') {
-                throw new Exception('Content data format is not supported');
-            }
-
             return [
                 'document' => [
-                    'format' => Mimes::tryFrom($document->mimeType)?->toExtension(), // @phpstan-ignore argument.type
-                    'name' => $document->documentTitle,
-                    'source' => ['bytes' => $document->dataFormat === 'base64' ? $document->document : base64_encode($document->document)], // @phpstan-ignore argument.type
+                    'format' => Mimes::tryFrom($document->mimeType())?->toExtension(),
+                    'name' => $document->documentTitle(),
+                    'source' => ['bytes' => $document->base64()],
                 ],
             ];
         }, $parts);
