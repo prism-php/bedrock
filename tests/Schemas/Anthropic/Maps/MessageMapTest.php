@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Schemas\Anthropic\Maps;
 
-use InvalidArgumentException;
 use Prism\Bedrock\Schemas\Anthropic\Maps\MessageMap;
+use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Providers\Anthropic\Enums\AnthropicCacheType;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
 use Prism\Prism\ValueObjects\Messages\Support\Image;
@@ -61,13 +61,12 @@ it('maps user messages with images from base64', function (): void {
 });
 
 it('does not maps user messages with images from url', function (): void {
-    $this->expectException(InvalidArgumentException::class);
     MessageMap::map([
         new UserMessage('Who are you?', [
             Image::fromUrl('https://storage.echolabs.dev/assets/logo.png'),
         ]),
     ]);
-});
+})->throws(PrismException::class);
 
 it('maps assistant message', function (): void {
     expect(MessageMap::map([
@@ -191,12 +190,12 @@ it('sets the cache type on a UserMessage image if cacheType providerOptions is s
             ],
             [
                 'type' => 'image',
+                'cache_control' => ['type' => 'ephemeral'],
                 'source' => [
                     'type' => 'base64',
                     'media_type' => 'image/png',
                     'data' => base64_encode(file_get_contents('tests/Fixtures/test-image.png')),
                 ],
-                'cache_control' => ['type' => 'ephemeral'],
             ],
         ],
     ]]);

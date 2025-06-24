@@ -4,23 +4,24 @@ namespace Prism\Bedrock;
 
 use Aws\Credentials\Credentials;
 use Aws\Signature\SignatureV4;
-use Generator;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Request;
-use Illuminate\Support\Facades\Http;
 use Prism\Bedrock\Enums\BedrockSchema;
+use Prism\Prism\Concerns\InitializesClient;
 use Prism\Prism\Contracts\PrismRequest;
-use Prism\Prism\Contracts\Provider;
 use Prism\Prism\Embeddings\Request as EmbeddingRequest;
 use Prism\Prism\Embeddings\Response as EmbeddingsResponse;
 use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\Providers\Provider;
 use Prism\Prism\Structured\Request as StructuredRequest;
 use Prism\Prism\Structured\Response as StructuredResponse;
 use Prism\Prism\Text\Request as TextRequest;
 use Prism\Prism\Text\Response as TextResponse;
 
-class Bedrock implements Provider
+class Bedrock extends Provider
 {
+    use InitializesClient;
+
     const KEY = 'bedrock';
 
     public function __construct(
@@ -94,15 +95,6 @@ class Bedrock implements Provider
         return $handler->handle($request);
     }
 
-    #[\Override]
-    /**
-     * @return Generator<Chunk>
-     */
-    public function stream(TextRequest $request): Generator
-    {
-        throw new PrismException('Prism Bedrock does not support streaming yet.');
-    }
-
     public function schema(PrismRequest $request): BedrockSchema
     {
         $override = $request->providerOptions();
@@ -129,7 +121,8 @@ class Bedrock implements Provider
             ? false
             : $request->providerOptions('enableCaching') ?? false;
 
-        return Http::acceptJson()
+        return $this->baseClient()
+            ->acceptJson()
             ->withHeader('explicitPromptCaching', $enableCaching ? 'enabled' : 'disabled')
             ->contentType('application/json')
             ->withOptions($options)

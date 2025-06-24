@@ -6,7 +6,6 @@ namespace Prism\Bedrock\Schemas\Anthropic\Maps;
 
 use BackedEnum;
 use Exception;
-use InvalidArgumentException;
 use Prism\Prism\Contracts\Message;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
@@ -169,20 +168,9 @@ class MessageMap
      */
     protected static function mapImageParts(array $parts, ?array $cache_control = null): array
     {
-        return array_map(function (Image $image) use ($cache_control): array {
-            if ($image->isUrl()) {
-                throw new InvalidArgumentException('URL image type is not supported by Anthropic');
-            }
-
-            return array_filter([
-                'type' => 'image',
-                'source' => [
-                    'type' => 'base64',
-                    'media_type' => $image->mimeType,
-                    'data' => $image->image,
-                ],
-                'cache_control' => $cache_control,
-            ]);
-        }, $parts);
+        return array_map(
+            fn (Image $image): array => (new ImageMapper($image, $cache_control))->toPayload(),
+            $parts
+        );
     }
 }
