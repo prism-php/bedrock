@@ -21,7 +21,7 @@ class ToolMap
                 'inputSchema' => [
                     'json' => [
                         'type' => 'object',
-                        'properties' => $tool->parametersAsArray(),
+                        'properties' => $tool->parametersAsArray() ?: (object) [],
                         'required' => $tool->requiredParameters(),
                     ],
                 ],
