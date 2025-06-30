@@ -189,6 +189,30 @@ $response = Prism::text()
 > [!TIP]
 > Anthropic currently supports a cacheType of "ephemeral". Converse currently supports a cacheType of "default". It is possible that Anthropic and/or AWS may add additional types in the future.
 
+## Structured Adapted Support
+
+Both Anthropic and Converse Schemas do not support a native structured format. 
+
+Prism Bedrock has adapted support by appending a prompt asking the model to a response conforming to the schema you provide.
+
+The performance of that prompt may vary by model. You can override it using `withProviderOptions()`:
+
+```php
+use Prism\Prism\Prism;
+use Prism\Bedrock\Bedrock;
+use Prism\Prism\ValueObjects\Messages\UserMessage;
+
+Prism::structured()
+    ->withSchema($schema)
+    ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
+    ->withProviderOptions([
+        // Override the default message of "Respond with ONLY JSON (i.e. not in backticks or a code block, with NO CONTENT outside the JSON) that matches the following schema:"
+        'jsonModeMessage' => 'My custom message', 
+    ])
+    ->withPrompt('My prompt')
+    ->asStructured();
+```
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.

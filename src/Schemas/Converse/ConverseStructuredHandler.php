@@ -120,7 +120,8 @@ class ConverseStructuredHandler extends BedrockStructuredHandler
     protected function appendMessageForJsonMode(Request $request): void
     {
         $request->addMessage(new UserMessage(sprintf(
-            "Respond with ONLY JSON (i.e. not in backticks or a code block, with NO CONTENT outside the JSON) that matches the following schema: \n %s",
+            "%s \n %s",
+            $request->providerOptions('jsonModeMessage') ?? 'Respond with ONLY JSON (i.e. not in backticks or a code block, with NO CONTENT outside the JSON) that matches the following schema:',
             json_encode($request->schema()->toArray(), JSON_PRETTY_PRINT)
         )));
     }

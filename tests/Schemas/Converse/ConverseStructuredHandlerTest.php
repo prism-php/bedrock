@@ -97,6 +97,42 @@ it('maps converse options when set with providerOptions', function (): void {
     $fake->assertRequest(fn (array $requests): mixed => expect($requests[0]->providerOptions())->toBe($providerOptions));
 });
 
+it('uses custom jsonModeMessage when provided via providerOptions', function (): void {
+    FixtureResponse::fakeResponseSequence('converse', 'converse/structured');
+
+    $schema = new ObjectSchema(
+        'output',
+        'the output object',
+        [
+            new StringSchema('weather', 'The weather forecast'),
+            new StringSchema('game_time', 'The tigers game time'),
+            new BooleanSchema('coat_required', 'whether a coat is required'),
+        ],
+        ['weather', 'game_time', 'coat_required']
+    );
+
+    $customMessage = 'Please return a JSON response using this custom format instruction';
+
+    Prism::structured()
+        ->withSchema($schema)
+        ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
+        ->withProviderOptions([
+            'apiSchema' => BedrockSchema::Converse,
+            'jsonModeMessage' => $customMessage,
+        ])
+        ->withSystemPrompt('The tigers game is at 3pm and the temperature will be 70º')
+        ->withPrompt('What time is the tigers game today and should I wear a coat?')
+        ->asStructured();
+
+    Http::assertSent(function (Request $request) use ($customMessage): bool {
+        $messages = $request->data()['messages'] ?? [];
+        $lastMessage = end($messages);
+
+        return isset($lastMessage['content'][0]['text']) &&
+               str_contains((string) $lastMessage['content'][0]['text'], $customMessage);
+    });
+});
+
 it('does not remove 0 values from payloads', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/structured');
 
