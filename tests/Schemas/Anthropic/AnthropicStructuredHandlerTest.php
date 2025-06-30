@@ -79,6 +79,38 @@ it('uses custom jsonModeMessage when provided via providerOptions', function ():
     });
 });
 
+it('uses default jsonModeMessage when no custom message is provided', function (): void {
+    FixtureResponse::fakeResponseSequence('invoke', 'anthropic/structured');
+
+    $schema = new ObjectSchema(
+        'output',
+        'the output object',
+        [
+            new StringSchema('weather', 'The weather forecast'),
+            new StringSchema('game_time', 'The tigers game time'),
+            new BooleanSchema('coat_required', 'whether a coat is required'),
+        ],
+        ['weather', 'game_time', 'coat_required']
+    );
+
+    $defaultMessage = 'Respond with ONLY JSON (i.e. not in backticks or a code block, with NO CONTENT outside the JSON) that matches the following schema:';
+
+    Prism::structured()
+        ->withSchema($schema)
+        ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
+        ->withSystemPrompt('The tigers game is at 3pm and the temperature will be 70º')
+        ->withPrompt('What time is the tigers game today and should I wear a coat?')
+        ->asStructured();
+
+    Http::assertSent(function (Request $request) use ($defaultMessage): bool {
+        $messages = $request->data()['messages'] ?? [];
+        $lastMessage = end($messages);
+
+        return isset($lastMessage['content'][0]['text']) &&
+               str_contains((string) $lastMessage['content'][0]['text'], $defaultMessage);
+    });
+});
+
 it('does not remove 0 values from payloads', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/structured');
 
