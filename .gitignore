@@ -8,3 +8,4 @@ phpunit.xml
 .vscode
 *.code-workspace
 ray.php
+CLAUDE.md
