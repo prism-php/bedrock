@@ -22,7 +22,7 @@
     "php": "^8.2",
     "laravel/framework": "^11.0|^12.0",
     "aws/aws-sdk-php": "^3.339",
-    "prism-php/prism": ">=0.63.0"
+    "prism-php/prism": ">=0.80.0"
   },
   "config": {
     "allow-plugins": {

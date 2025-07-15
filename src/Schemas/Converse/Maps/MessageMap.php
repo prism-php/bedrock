@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Prism\Bedrock\Schemas\Converse\Maps;
 
 use Exception;
-use InvalidArgumentException;
-use Prism\Bedrock\Enums\Mimes;
 use Prism\Prism\Contracts\Message;
 use Prism\Prism\Exceptions\PrismException;
+use Prism\Prism\ValueObjects\Media\Document;
+use Prism\Prism\ValueObjects\Media\Image;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
-use Prism\Prism\ValueObjects\Messages\Support\Document;
-use Prism\Prism\ValueObjects\Messages\Support\Image;
 use Prism\Prism\ValueObjects\Messages\SystemMessage;
 use Prism\Prism\ValueObjects\Messages\ToolResultMessage;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
@@ -156,18 +154,10 @@ class MessageMap
      */
     protected static function mapImageParts(array $parts): array
     {
-        return array_map(function (Image $image): array {
-            if ($image->isUrl()) {
-                throw new InvalidArgumentException('URL image type is not supported by Bedrock.');
-            }
-
-            return [
-                'image' => [
-                    'format' => Mimes::tryFrom($image->mimeType)?->toExtension(), // @phpstan-ignore argument.type
-                    'source' => ['bytes' => $image->image],
-                ],
-            ];
-        }, $parts);
+        return array_map(
+            fn (Image $image): array => (new ImageMapper($image))->toPayload(),
+            $parts
+        );
     }
 
     /**
@@ -176,18 +166,9 @@ class MessageMap
      */
     protected static function mapDocumentParts(array $parts): array
     {
-        return array_map(function (Document $document): array {
-            if ($document->dataFormat === 'content') {
-                throw new Exception('Content data format is not supported');
-            }
-
-            return [
-                'document' => [
-                    'format' => Mimes::tryFrom($document->mimeType)?->toExtension(), // @phpstan-ignore argument.type
-                    'name' => $document->documentTitle,
-                    'source' => ['bytes' => $document->dataFormat === 'base64' ? $document->document : base64_encode($document->document)], // @phpstan-ignore argument.type
-                ],
-            ];
-        }, $parts);
+        return array_map(
+            fn (Document $document): array => (new DocumentMapper($document))->toPayload(),
+            $parts
+        );
     }
 }

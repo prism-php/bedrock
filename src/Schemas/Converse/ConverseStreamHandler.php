@@ -13,7 +13,6 @@ use Prism\Prism\Concerns\CallsTools;
 use Prism\Prism\Exceptions\PrismChunkDecodeException;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Exceptions\PrismRateLimitedException;
-use Prism\Prism\Providers\Anthropic\Concerns\HandlesResponse;
 use Prism\Prism\Providers\Anthropic\ValueObjects\StreamState;
 use Prism\Prism\Text\Chunk;
 use Prism\Prism\Text\Request;
@@ -22,7 +21,7 @@ use Throwable;
 
 class ConverseStreamHandler extends BedrockStreamHandler
 {
-    use CallsTools, HandlesResponse, HandlesStream;
+    use CallsTools, HandlesStream;
 
     protected StreamState $state;
 
@@ -75,6 +74,7 @@ class ConverseStreamHandler extends BedrockStreamHandler
                 ]),
         ]);
     }
+
     protected function sendRequest(Request $request): Result
     {
         try {
