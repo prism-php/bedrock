@@ -5,6 +5,7 @@ namespace Prism\Bedrock\Schemas\Converse;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Prism\Bedrock\Contracts\BedrockTextHandler;
+use Prism\Bedrock\Schemas\Converse\Concerns\ExtractsText;
 use Prism\Bedrock\Schemas\Converse\Concerns\ExtractsToolCalls;
 use Prism\Bedrock\Schemas\Converse\Maps\FinishReasonMap;
 use Prism\Bedrock\Schemas\Converse\Maps\MessageMap;
@@ -26,7 +27,7 @@ use Throwable;
 
 class ConverseTextHandler extends BedrockTextHandler
 {
-    use CallsTools, ExtractsToolCalls;
+    use CallsTools, ExtractsText, ExtractsToolCalls;
 
     protected TextResponse $tempResponse;
 
@@ -110,6 +111,7 @@ class ConverseTextHandler extends BedrockTextHandler
         $this->tempResponse = new TextResponse(
             steps: new Collection,
             text: data_get($data, 'output.message.content.0.text', ''),
+            messages: new Collection,
             finishReason: FinishReasonMap::map(data_get($data, 'stopReason')),
             toolCalls: $this->extractToolCalls($data),
             toolResults: [],
@@ -118,7 +120,6 @@ class ConverseTextHandler extends BedrockTextHandler
                 completionTokens: data_get($data, 'usage.outputTokens')
             ),
             meta: new Meta(id: '', model: ''), // Not provided in Converse response.
-            messages: new Collection
         );
     }
 
