@@ -59,7 +59,7 @@ class ConverseTextHandler extends BedrockTextHandler
         return match ($this->tempResponse->finishReason) {
             FinishReason::ToolCalls => $this->handleToolCalls($request),
             FinishReason::Stop, FinishReason::Length => $this->handleStop($request),
-            default => throw new PrismException('Anthropic: unknown finish reason'),
+            default => throw new PrismException('Converse: unknown finish reason'),
         };
     }
 

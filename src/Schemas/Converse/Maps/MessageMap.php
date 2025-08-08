@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Prism\Bedrock\Schemas\Converse\Maps;
 
-use Exception;
 use Prism\Prism\Contracts\Message;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\ValueObjects\Media\Document;
@@ -65,7 +64,7 @@ class MessageMap
             AssistantMessage::class => self::mapAssistantMessage($message),
             ToolResultMessage::class => self::mapToolResultMessage($message),
             SystemMessage::class => self::mapSystemMessage($message),
-            default => throw new Exception('Could not map message type '.$message::class),
+            default => throw new PrismException('Converse: Could not map message type '.$message::class),
         };
     }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Prism\Bedrock\Schemas\Anthropic\Maps;
 
 use BackedEnum;
-use Exception;
 use Prism\Prism\Contracts\Message;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\ValueObjects\Media\Image;
@@ -55,7 +54,7 @@ class MessageMap
             UserMessage::class => self::mapUserMessage($message),
             AssistantMessage::class => self::mapAssistantMessage($message),
             ToolResultMessage::class => self::mapToolResultMessage($message),
-            default => throw new Exception('Could not map message type '.$message::class),
+            default => throw new PrismException('Anthropic: Could not map message type '.$message::class),
         };
     }
 
@@ -101,7 +100,7 @@ class MessageMap
         $cache_control = $cacheType ? ['type' => $cacheType instanceof BackedEnum ? $cacheType->value : $cacheType] : null;
 
         if ($message->documents() !== []) {
-            throw new Exception('Documents are not yet supported by Anthropic on Bedrock.');
+            throw new PrismException('Anthropic: Documents are not yet supported by Anthropic on Bedrock.');
         }
 
         return [
@@ -129,7 +128,7 @@ class MessageMap
         $content = [];
 
         if (isset($message->additionalContent['messagePartsWithCitations'])) {
-            throw new Exception('Citations are not yet supported by Anthropic on Bedrock.');
+            throw new PrismException('Anthropic: Citations are not yet supported by Anthropic on Bedrock.');
             // TODO: update once citation support is supported by Anthropic on Bedrock
             // foreach ($message->additionalContent['messagePartsWithCitations'] as $part) {
             //     $content[] = array_filter([
