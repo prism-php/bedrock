@@ -37,7 +37,7 @@ it('can generate text with reasoning content', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-reasoning-content');
 
     $response = Prism::text()
-        ->using('bedrock', 'amazon.nova-micro-v1:0')
+        ->using('bedrock', 'openai.gpt-oss-120b-1:0')
         ->withPrompt('Tell me a short story about a brave knight.')
         ->asText();
 
