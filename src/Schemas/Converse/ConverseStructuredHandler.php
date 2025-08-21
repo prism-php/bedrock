@@ -49,7 +49,6 @@ class ConverseStructuredHandler extends BedrockStructuredHandler
         );
 
         $request->addMessage($responseMessage);
-        $this->responseBuilder->addResponseMessage($responseMessage);
 
         $this->responseBuilder->addStep(new Step(
             text: $this->tempResponse->text,
@@ -77,7 +76,7 @@ class ConverseStructuredHandler extends BedrockStructuredHandler
                 'maxTokens' => $request->maxTokens(),
                 'temperature' => $request->temperature(),
                 'topP' => $request->topP(),
-            ], fn ($value): bool => $value !== null),
+            ], fn (float|int|null $value): bool => $value !== null),
             'messages' => MessageMap::map($request->messages()),
             'performanceConfig' => $request->providerOptions('performanceConfig'),
             'promptVariables' => $request->providerOptions('promptVariables'),
@@ -104,7 +103,6 @@ class ConverseStructuredHandler extends BedrockStructuredHandler
 
         $this->tempResponse = new StructuredResponse(
             steps: new Collection,
-            responseMessages: new Collection,
             text: data_get($data, 'output.message.content.0.text', ''),
             structured: [],
             finishReason: FinishReasonMap::map(data_get($data, 'stopReason')),
@@ -113,7 +111,6 @@ class ConverseStructuredHandler extends BedrockStructuredHandler
                 completionTokens: data_get($data, 'usage.outputTokens')
             ),
             meta: new Meta(id: '', model: '') // Not provided in Converse response.
-
         );
     }
 

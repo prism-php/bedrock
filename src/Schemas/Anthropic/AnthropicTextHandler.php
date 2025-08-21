@@ -55,8 +55,6 @@ class AnthropicTextHandler extends BedrockTextHandler
             $this->tempResponse->additionalContent,
         );
 
-        $this->responseBuilder->addResponseMessage($responseMessage);
-
         $request->addMessage($responseMessage);
 
         return match ($this->tempResponse->finishReason) {
@@ -80,7 +78,7 @@ class AnthropicTextHandler extends BedrockTextHandler
             'top_p' => $request->topP(),
             'tools' => ToolMap::map($request->tools()),
             'tool_choice' => ToolChoiceMap::map($request->toolChoice()),
-        ], fn ($value): bool => $value !== null);
+        ], fn (float|int|string|array|null $value): bool => $value !== null);
     }
 
     protected function sendRequest(Request $request): void
@@ -101,8 +99,6 @@ class AnthropicTextHandler extends BedrockTextHandler
 
         $this->tempResponse = new TextResponse(
             steps: new Collection,
-            responseMessages: new Collection,
-            messages: new Collection,
             text: $this->extractText($data),
             finishReason: FinishReasonMap::map(data_get($data, 'stop_reason', '')),
             toolCalls: $this->extractToolCalls($data),
@@ -116,7 +112,8 @@ class AnthropicTextHandler extends BedrockTextHandler
             meta: new Meta(
                 id: data_get($data, 'id'),
                 model: data_get($data, 'model'),
-            )
+            ),
+            messages: new Collection
         );
     }
 

@@ -52,7 +52,6 @@ class AnthropicStructuredHandler extends BedrockStructuredHandler
         );
 
         $request->addMessage($responseMessage);
-        $this->responseBuilder->addResponseMessage($responseMessage);
 
         $this->responseBuilder->addStep(new Step(
             text: $this->tempResponse->text,
@@ -79,7 +78,7 @@ class AnthropicStructuredHandler extends BedrockStructuredHandler
             'system' => MessageMap::mapSystemMessages($request->systemPrompts()),
             'temperature' => $request->temperature(),
             'top_p' => $request->topP(),
-        ], fn ($value): bool => $value !== null);
+        ], fn (string|float|int|array|null $value): bool => $value !== null);
     }
 
     protected function sendRequest(Request $request): void
@@ -100,7 +99,6 @@ class AnthropicStructuredHandler extends BedrockStructuredHandler
 
         $this->tempResponse = new StructuredResponse(
             steps: new Collection,
-            responseMessages: new Collection,
             text: $this->extractText($data),
             structured: [],
             finishReason: FinishReasonMap::map(data_get($data, 'stop_reason', '')),

@@ -12,7 +12,7 @@ trait ExtractsToolCalls
      */
     protected function extractToolCalls(array $data): array
     {
-        $toolCalls = array_map(function ($content) {
+        $toolCalls = array_map(function ($content): ?ToolCall {
             if (data_get($content, 'type') === 'tool_use') {
                 return new ToolCall(
                     id: data_get($content, 'id'),
@@ -20,8 +20,10 @@ trait ExtractsToolCalls
                     arguments: data_get($content, 'input')
                 );
             }
+
+            return null;
         }, data_get($data, 'content', []));
 
-        return array_values(array_filter($toolCalls));
+        return array_values(array_filter($toolCalls, fn (?ToolCall $toolCall): bool => $toolCall instanceof ToolCall));
     }
 }
