@@ -11,8 +11,8 @@ use Prism\Prism\Facades\Tool;
 use Prism\Prism\Prism;
 use Prism\Prism\Testing\TextStepFake;
 use Prism\Prism\Text\ResponseBuilder;
-use Prism\Prism\ValueObjects\Messages\Support\Document;
-use Prism\Prism\ValueObjects\Messages\Support\Image;
+use Prism\Prism\ValueObjects\Media\Document;
+use Prism\Prism\ValueObjects\Media\Image;
 use Prism\Prism\ValueObjects\Messages\UserMessage;
 use Tests\Fixtures\FixtureResponse;
 
