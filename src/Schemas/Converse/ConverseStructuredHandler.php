@@ -76,7 +76,7 @@ class ConverseStructuredHandler extends BedrockStructuredHandler
                 'maxTokens' => $request->maxTokens(),
                 'temperature' => $request->temperature(),
                 'topP' => $request->topP(),
-            ], fn (float|int|null $value): bool => $value !== null),
+            ], fn (mixed $value): bool => $value !== null),
             'messages' => MessageMap::map($request->messages()),
             'performanceConfig' => $request->providerOptions('performanceConfig'),
             'promptVariables' => $request->providerOptions('promptVariables'),
