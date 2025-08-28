@@ -5,8 +5,8 @@ namespace Prism\Bedrock\Schemas\Converse\Maps;
 use Prism\Bedrock\Enums\Mimes;
 use Prism\Prism\Contracts\ProviderMediaMapper;
 use Prism\Prism\Enums\Provider;
-use Prism\Prism\ValueObjects\Messages\Support\Image;
-use Prism\Prism\ValueObjects\Messages\Support\Media;
+use Prism\Prism\ValueObjects\Media\Image;
+use Prism\Prism\ValueObjects\Media\Media;
 
 class ImageMapper extends ProviderMediaMapper
 {

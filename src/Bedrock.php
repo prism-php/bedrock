@@ -2,8 +2,10 @@
 
 namespace Prism\Bedrock;
 
+use Aws\BedrockRuntime\BedrockRuntimeClient;
 use Aws\Credentials\Credentials;
 use Aws\Signature\SignatureV4;
+use Generator;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Request;
 use Prism\Bedrock\Enums\BedrockSchema;
@@ -15,6 +17,7 @@ use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Providers\Provider;
 use Prism\Prism\Structured\Request as StructuredRequest;
 use Prism\Prism\Structured\Response as StructuredResponse;
+use Prism\Prism\Text\Chunk;
 use Prism\Prism\Text\Request as TextRequest;
 use Prism\Prism\Text\Response as TextResponse;
 
@@ -95,6 +98,23 @@ class Bedrock extends Provider
         return $handler->handle($request);
     }
 
+    #[\Override]
+    /**
+     * @return Generator<Chunk>
+     */
+    public function stream(TextRequest $request): Generator
+    {
+        $schema = BedrockSchema::Converse;
+
+        $handler = $schema->streamHandler();
+
+        $client = $this->bedrockClient();
+
+        $handler = new $handler($this, $client);
+
+        return $handler->handle($request);
+    }
+
     public function schema(PrismRequest $request): BedrockSchema
     {
         $override = $request->providerOptions();
@@ -107,6 +127,11 @@ class Bedrock extends Provider
     public function apiVersion(PrismRequest $request): ?string
     {
         return $this->schema($request)->defaultApiVersion();
+    }
+
+    protected function bedrockClient(): BedrockRuntimeClient
+    {
+        return app(BedrockClientFactory::class)->make();
     }
 
     /**

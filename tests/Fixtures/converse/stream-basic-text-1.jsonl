@@ -1,0 +1,14 @@
+{"messageStart":{"role":"assistant"}}
+{"contentBlockDelta":{"delta":{"text":"I'm"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":" an AI"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":" assistant created by"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":" Anthropic to"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":" be helpful, harm"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":"less, and honest"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":". I"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":" don't have a"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":" physical body or"},"contentBlockIndex":0}}
+{"contentBlockDelta":{"delta":{"text":" avatar"},"contentBlockIndex":0}}
+{"contentBlockStop":{"contentBlockIndex":0}}
+{"messageStop":{"stopReason":"end_turn"}}
+{"metadata":{"usage":{"inputTokens":11,"outputTokens":48,"totalTokens":59},"metrics":{"latencyMs":1269}}}

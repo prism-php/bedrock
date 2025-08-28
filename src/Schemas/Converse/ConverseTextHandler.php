@@ -112,7 +112,6 @@ class ConverseTextHandler extends BedrockTextHandler
         $this->tempResponse = new TextResponse(
             steps: new Collection,
             responseMessages: new Collection,
-            messages: new Collection,
             text: data_get($data, 'output.message.content.0.text', ''),
             finishReason: FinishReasonMap::map(data_get($data, 'stopReason')),
             toolCalls: $this->extractToolCalls($data),
@@ -121,7 +120,8 @@ class ConverseTextHandler extends BedrockTextHandler
                 promptTokens: data_get($data, 'usage.inputTokens'),
                 completionTokens: data_get($data, 'usage.outputTokens')
             ),
-            meta: new Meta(id: '', model: '') // Not provided in Converse response.
+            meta: new Meta(id: '', model: ''),
+            messages: new Collection // Not provided in Converse response.
         );
     }
 
