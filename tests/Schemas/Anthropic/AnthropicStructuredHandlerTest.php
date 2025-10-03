@@ -135,7 +135,11 @@ it('does not remove 0 values from payloads', function (): void {
         ->usingTemperature(0)
         ->asStructured();
 
-    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation => expect($request->data())->toMatchArray([
-        'temperature' => 0,
-    ]));
+    Http::assertSent(function (Request $request): bool {
+        expect($request->data())->toMatchArray([
+            'temperature' => 0,
+        ]);
+
+        return true;
+    });
 });
