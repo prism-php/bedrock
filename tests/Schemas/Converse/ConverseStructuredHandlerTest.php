@@ -193,7 +193,7 @@ it('does not remove 0 values from payloads', function (): void {
         ->usingTemperature(0)
         ->asStructured();
 
-    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation|\Pest\Expectation => expect($request->data())->toMatchArray([
+    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation => expect($request->data())->toMatchArray([
         'inferenceConfig' => [
             'maxTokens' => 2048,
             'temperature' => 0,

@@ -298,7 +298,7 @@ it('does not remove zero values from payload', function (): void {
         ->usingTemperature(0)
         ->asText();
 
-    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation|\Pest\Expectation => expect($request->data())->toMatchArray([
+    Http::assertSent(fn (Request $request): \Pest\Mixins\Expectation => expect($request->data())->toMatchArray([
         'inferenceConfig' => [
             'temperature' => 0,
             'maxTokens' => 2048,
