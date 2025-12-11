@@ -29,7 +29,7 @@ it('returns structured output', function (): void {
         ['weather', 'game_time', 'coat_required']
     );
 
-    $response = Prism::structured()
+    $response = (new Prism())->structured()
         ->withSchema($schema)
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withProviderOptions(['apiSchema' => BedrockSchema::Converse])
@@ -86,7 +86,7 @@ it('maps converse options when set with providerOptions', function (): void {
         ['weather', 'game_time', 'coat_required']
     );
 
-    $response = Prism::structured()
+    $response = (new Prism())->structured()
         ->withSchema($schema)
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withProviderOptions($providerOptions)
@@ -113,7 +113,7 @@ it('uses custom jsonModeMessage when provided via providerOptions', function ():
 
     $customMessage = 'Please return a JSON response using this custom format instruction';
 
-    Prism::structured()
+    (new Prism())->structured()
         ->withSchema($schema)
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withProviderOptions([
@@ -149,7 +149,7 @@ it('uses default jsonModeMessage when no custom message is provided', function (
 
     $defaultMessage = 'Respond with ONLY JSON (i.e. not in backticks or a code block, with NO CONTENT outside the JSON) that matches the following schema:';
 
-    Prism::structured()
+    (new Prism())->structured()
         ->withSchema($schema)
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withProviderOptions([
@@ -182,7 +182,7 @@ it('does not remove 0 values from payloads', function (): void {
         ['weather', 'game_time', 'coat_required']
     );
 
-    Prism::structured()
+    (new Prism())->structured()
         ->withSchema($schema)
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withProviderOptions([

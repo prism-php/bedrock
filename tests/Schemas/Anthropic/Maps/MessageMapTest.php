@@ -114,6 +114,34 @@ it('maps assistant message with tool calls', function (): void {
     ]);
 });
 
+it('maps assistant message with tool calls with empty arguments as stdClass', function (): void {
+    expect(MessageMap::map([
+        new AssistantMessage('Running tool', [
+            new ToolCall(
+                'tool_5678',
+                'get_time',
+                []
+            ),
+        ]),
+    ]))->toEqual([
+        [
+            'role' => 'assistant',
+            'content' => [
+                [
+                    'type' => 'text',
+                    'text' => 'Running tool',
+                ],
+                [
+                    'type' => 'tool_use',
+                    'id' => 'tool_5678',
+                    'name' => 'get_time',
+                    'input' => new \stdClass,
+                ],
+            ],
+        ],
+    ]);
+});
+
 it('maps tool result messages', function (): void {
     expect(MessageMap::map([
         new ToolResultMessage([

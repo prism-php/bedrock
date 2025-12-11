@@ -16,14 +16,14 @@ class ToolMap
     public static function map(array $tools): array
     {
         return array_map(function (PrismTool $tool): array {
-            $cacheType = data_get($tool->providerOptions(), 'cacheType', null);
+            $cacheType = data_get($tool->providerOptions(), 'cacheType');
 
             return array_filter([
                 'name' => $tool->name(),
                 'description' => $tool->description(),
                 'input_schema' => [
                     'type' => 'object',
-                    'properties' => $tool->parametersAsArray(),
+                    'properties' => $tool->parametersAsArray() ?: (object) [],
                     'required' => $tool->requiredParameters(),
                 ],
                 'cache_control' => $cacheType

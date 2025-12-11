@@ -14,10 +14,12 @@ trait ExtractsToolCalls
     {
         $toolCalls = array_map(function ($content): ?ToolCall {
             if (data_get($content, 'type') === 'tool_use') {
+                $input = data_get($content, 'input');
+
                 return new ToolCall(
                     id: data_get($content, 'id'),
                     name: data_get($content, 'name'),
-                    arguments: data_get($content, 'input')
+                    arguments: is_string($input) ? (json_decode($input, true) ?? []) : ($input ?? [])
                 );
             }
 

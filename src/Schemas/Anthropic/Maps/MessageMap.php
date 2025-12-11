@@ -28,7 +28,7 @@ class MessageMap
         }
 
         return array_map(
-            fn (Message $message): array => self::mapMessage($message),
+            self::mapMessage(...),
             $messages
         );
     }
@@ -40,7 +40,7 @@ class MessageMap
     public static function mapSystemMessages(array $messages): array
     {
         return array_map(
-            fn (Message $message): array => self::mapSystemMessage($message),
+            self::mapSystemMessage(...),
             $messages
         );
     }
@@ -65,7 +65,7 @@ class MessageMap
     {
         $providerOptions = $systemMessage->providerOptions();
 
-        $cacheType = data_get($providerOptions, 'cacheType', null);
+        $cacheType = data_get($providerOptions, 'cacheType');
 
         return array_filter([
             'type' => 'text',
@@ -96,7 +96,7 @@ class MessageMap
     {
         $providerOptions = $message->providerOptions();
 
-        $cacheType = data_get($providerOptions, 'cacheType', null);
+        $cacheType = data_get($providerOptions, 'cacheType');
         $cache_control = $cacheType ? ['type' => $cacheType instanceof BackedEnum ? $cacheType->value : $cacheType] : null;
 
         if ($message->documents() !== []) {
@@ -123,7 +123,7 @@ class MessageMap
     {
         $providerOptions = $message->providerOptions();
 
-        $cacheType = data_get($providerOptions, 'cacheType', null);
+        $cacheType = data_get($providerOptions, 'cacheType');
 
         $content = [];
 
@@ -150,7 +150,7 @@ class MessageMap
                 'type' => 'tool_use',
                 'id' => $toolCall->id,
                 'name' => $toolCall->name,
-                'input' => $toolCall->arguments(),
+                'input' => $toolCall->arguments() === [] ? new \stdClass : $toolCall->arguments(),
             ], $message->toolCalls)
             : [];
 

@@ -99,7 +99,7 @@ class Bedrock extends Provider
     {
         $override = $request->providerOptions();
 
-        $override = data_get($override, 'apiSchema', null);
+        $override = data_get($override, 'apiSchema');
 
         return $override ?? BedrockSchema::fromModelString($request->model());
     }
