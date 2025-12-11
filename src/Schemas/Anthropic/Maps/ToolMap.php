@@ -23,7 +23,7 @@ class ToolMap
                 'description' => $tool->description(),
                 'input_schema' => [
                     'type' => 'object',
-                    'properties' => $tool->parametersAsArray(),
+                    'properties' => $tool->parametersAsArray() ?: (object) [],
                     'required' => $tool->requiredParameters(),
                 ],
                 'cache_control' => $cacheType

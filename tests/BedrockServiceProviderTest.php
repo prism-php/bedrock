@@ -7,7 +7,7 @@ use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Facades\Prism;
 
 it('registers itself as a provider with prism', function (): void {
-    $pendingRequest = Prism::text()->using('bedrock', 'test-model');
+    $pendingRequest = (new Prism())->text()->using('bedrock', 'test-model');
 
     expect($pendingRequest->provider())->toBeInstanceOf(Bedrock::class);
 });
@@ -16,7 +16,7 @@ it('throws an exception for embeddings with Anthropic apiSchema', function (): v
     Http::fake();
     Http::preventStrayRequests();
 
-    Prism::embeddings()
+    (new Prism())->embeddings()
         ->using('bedrock', 'test-model')
         ->withProviderOptions(['apiSchema' => BedrockSchema::Anthropic])
         ->fromInput('Hello world')
@@ -27,7 +27,7 @@ it('throws an exception for embeddings with converse apiSchema', function (): vo
     Http::fake();
     Http::preventStrayRequests();
 
-    Prism::embeddings()
+    (new Prism())->embeddings()
         ->using('bedrock', 'test-model')
         ->fromInput('Hello world')
         ->asEmbeddings();

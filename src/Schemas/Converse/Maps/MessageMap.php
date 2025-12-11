@@ -142,7 +142,7 @@ class MessageMap
             'toolUse' => [
                 'toolUseId' => $toolCall->id,
                 'name' => $toolCall->name,
-                'input' => $toolCall->arguments(),
+                'input' => $toolCall->arguments() === [] ? new \stdClass : $toolCall->arguments(),
             ],
         ], $parts);
     }

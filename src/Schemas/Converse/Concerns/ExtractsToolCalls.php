@@ -18,10 +18,12 @@ trait ExtractsToolCalls
                 return;
             }
 
+            $input = data_get($use, 'input');
+
             return new ToolCall(
                 id: data_get($use, 'toolUseId'),
                 name: data_get($use, 'name'),
-                arguments: data_get($use, 'input')
+                arguments: is_string($input) ? (json_decode($input, true) ?? []) : ($input ?? [])
             );
 
         }, data_get($data, 'output.message.content', []));

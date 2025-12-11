@@ -35,3 +35,26 @@ it('maps tools', function (): void {
         ],
     ]);
 });
+
+it('maps parameterless tools with empty object properties', function (): void {
+    $tool = (new Tool)
+        ->as('get_time')
+        ->for('Get the current time')
+        ->using(fn (): string => '12:00 PM');
+
+    expect(ToolMap::map([$tool]))->toEqual([
+        [
+            'toolSpec' => [
+                'name' => 'get_time',
+                'description' => 'Get the current time',
+                'inputSchema' => [
+                    'json' => [
+                        'type' => 'object',
+                        'properties' => (object) [],
+                        'required' => [],
+                    ],
+                ],
+            ],
+        ],
+    ]);
+});
