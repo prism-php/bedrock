@@ -4,9 +4,11 @@ namespace Prism\Bedrock;
 
 use Aws\Credentials\Credentials;
 use Aws\Signature\SignatureV4;
+use Generator;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Request;
 use Prism\Bedrock\Enums\BedrockSchema;
+use Prism\Bedrock\Schemas\Converse\ConverseStreamHandler;
 use Prism\Prism\Concerns\InitializesClient;
 use Prism\Prism\Contracts\PrismRequest;
 use Prism\Prism\Embeddings\Request as EmbeddingRequest;
@@ -69,6 +71,18 @@ class Bedrock extends Provider
         );
 
         $handler = new $handler($this, $client);
+
+        return $handler->handle($request);
+    }
+
+    #[\Override]
+    public function stream(TextRequest $request): Generator
+    {
+        $handler = new ConverseStreamHandler($this->client(
+            $request,
+            $request->clientOptions(),
+            $request->clientRetry()
+        ));
 
         return $handler->handle($request);
     }

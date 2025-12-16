@@ -136,11 +136,11 @@ Prism Bedrock supports three of those API schemas:
 
 Each schema supports different capabilities:
 
-| Schema | Text | Structured | Embeddings |
-|--------|:----:|:----------:|:----------:|
-| Converse | ✅ | ✅ | ❌ |
-| Anthropic | ✅ | ✅ | ❌ |
-| Cohere | ❌ | ❌ | ✅ |
+| Schema | Text | Structured | Embeddings | Stream |
+|--------|:----:|:----------:|:----------:|:------:|
+| Converse | ✅ | ✅ | ❌ | ✅ |
+| Anthropic | ✅ | ✅ | ❌ | ❌|
+| Cohere | ❌ | ❌ | ✅ | ❌ |
 
 \* A unified interface for multiple providers. See [AWS documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html) for a list of supported models.
 

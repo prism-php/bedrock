@@ -8,6 +8,7 @@ use Prism\Prism\Contracts\Message;
 use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\ValueObjects\Media\Document;
 use Prism\Prism\ValueObjects\Media\Image;
+use Prism\Prism\ValueObjects\MessagePartWithCitations;
 use Prism\Prism\ValueObjects\Messages\AssistantMessage;
 use Prism\Prism\ValueObjects\Messages\SystemMessage;
 use Prism\Prism\ValueObjects\Messages\ToolResultMessage;
@@ -109,7 +110,7 @@ class MessageMap
             'content' => array_filter([
                 ['text' => $message->text()],
                 ...self::mapImageParts($message->images()),
-                ...self::mapDocumentParts($message->documents()),
+                ...self::mapDocumentParts($message->documents(), $message->providerOptions()),
                 $cacheType ? ['cachePoint' => ['type' => $cacheType]] : null,
             ]),
         ];
@@ -127,6 +128,7 @@ class MessageMap
             'content' => array_values(array_filter([
                 $message->content === '' || $message->content === '0' ? null : ['text' => $message->content],
                 ...self::mapToolCalls($message->toolCalls),
+                ...self::mapCitations($message->additionalContent['citations'] ?? []),
                 $cacheType ? ['cachePoint' => ['type' => $cacheType]] : null,
             ])),
         ];
@@ -148,6 +150,18 @@ class MessageMap
     }
 
     /**
+     * @param  array<int, MessagePartWithCitations>  $parts
+     * @return array<int, array<string, mixed>>
+     */
+    protected static function mapCitations(array $parts): array
+    {
+        return array_map(
+            fn (MessagePartWithCitations $part): array => CitationsMapper::mapToConverse($part),
+            $parts
+        );
+    }
+
+    /**
      * @param  Image[]  $parts
      * @return array<int, mixed>
      */
@@ -161,12 +175,16 @@ class MessageMap
 
     /**
      * @param  Document[]  $parts
+     * @param  array<string, mixed>  $providerOptions
      * @return array<string,array<string,mixed>>
      */
-    protected static function mapDocumentParts(array $parts): array
+    protected static function mapDocumentParts(array $parts, array $providerOptions = []): array
     {
         return array_map(
-            fn (Document $document): array => (new DocumentMapper($document))->toPayload(),
+            fn (Document $document): array => (new DocumentMapper(
+                media: $document,
+                citationsConfig: data_get($providerOptions, 'citations', null)
+            ))->toPayload(),
             $parts
         );
     }

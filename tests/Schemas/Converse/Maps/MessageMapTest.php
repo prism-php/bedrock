@@ -75,6 +75,36 @@ it('maps an md document correctly', function (): void {
     ]]);
 });
 
+it('maps a document with citations enabled correctly', function (): void {
+    expect(MessageMap::map([
+        (new UserMessage(
+            content: 'Who are you?',
+            additionalContent: [
+                Document::fromPath('tests/Fixtures/document.md', 'Answer To Life'),
+            ]
+        ))->withProviderOptions([
+            'citations' => [
+                'enabled' => true,
+            ],
+        ]),
+    ]))->toBe([[
+        'role' => 'user',
+        'content' => [
+            ['text' => 'Who are you?'],
+            [
+                'document' => [
+                    'format' => 'txt',
+                    'name' => 'Answer To Life',
+                    'source' => ['bytes' => base64_encode(file_get_contents('tests/Fixtures/document.md'))],
+                    'citations' => [
+                        'enabled' => true,
+                    ],
+                ],
+            ],
+        ],
+    ]]);
+});
+
 it('maps an image correctly', function (): void {
     expect(MessageMap::map([
         new UserMessage(
