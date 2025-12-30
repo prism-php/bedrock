@@ -9,3 +9,4 @@ phpunit.xml
 *.code-workspace
 ray.php
 CLAUDE.md
+.claude/
