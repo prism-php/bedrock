@@ -65,7 +65,7 @@ class CohereEmbeddingsHandler extends BedrockEmbeddingsHandler
         $body = $this->httpResponse->json();
 
         return new EmbeddingsResponse(
-            embeddings: array_map(fn (array $item): Embedding => Embedding::fromArray($item), data_get($body, 'embeddings', [])),
+            embeddings: array_map(Embedding::fromArray(...), data_get($body, 'embeddings', [])),
             usage: new EmbeddingsUsage(
                 tokens: (int) $this->httpResponse->header('X-Amzn-Bedrock-Input-Token-Count')
             ),

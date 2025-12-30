@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Schemas\Cohere;
 
 use Illuminate\Support\Facades\Http;
-use Prism\Prism\Prism;
+use Prism\Prism\Facades\Prism;
 use Prism\Prism\ValueObjects\Embedding;
 use Tests\Fixtures\FixtureResponse;
 

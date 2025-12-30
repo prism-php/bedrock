@@ -35,7 +35,7 @@ class BedrockServiceProvider extends ServiceProvider
     protected function registerWithPrism(): void
     {
         $this->app->extend(PrismManager::class, function (PrismManager $prismManager): \Prism\Prism\PrismManager {
-            $prismManager->extend(Bedrock::KEY, fn ($app, $config): Bedrock => new Bedrock(
+            $prismManager->extend(Bedrock::KEY, fn ($app, array $config): Bedrock => new Bedrock(
                 credentials: BedrockServiceProvider::getCredentials($config),
                 region: $config['region']
             ));

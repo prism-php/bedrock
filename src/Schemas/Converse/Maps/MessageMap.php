@@ -28,7 +28,7 @@ class MessageMap
         }
 
         return array_map(
-            fn (Message $message): array => self::mapMessage($message),
+            self::mapMessage(...),
             $messages
         );
     }
@@ -44,7 +44,7 @@ class MessageMap
         foreach ($systemPrompts as $prompt) {
             $output[] = self::mapSystemMessage($prompt);
 
-            $cacheType = data_get($prompt->providerOptions(), 'cacheType', null);
+            $cacheType = data_get($prompt->providerOptions(), 'cacheType');
 
             if ($cacheType) {
                 $output[] = ['cachePoint' => ['type' => $cacheType]];
@@ -102,7 +102,7 @@ class MessageMap
      */
     protected static function mapUserMessage(UserMessage $message): array
     {
-        $cacheType = data_get($message->providerOptions(), 'cacheType', null);
+        $cacheType = data_get($message->providerOptions(), 'cacheType');
 
         return [
             'role' => 'user',
@@ -120,7 +120,7 @@ class MessageMap
      */
     protected static function mapAssistantMessage(AssistantMessage $message): array
     {
-        $cacheType = data_get($message->providerOptions(), 'cacheType', null);
+        $cacheType = data_get($message->providerOptions(), 'cacheType');
 
         return [
             'role' => 'assistant',

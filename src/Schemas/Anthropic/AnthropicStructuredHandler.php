@@ -105,8 +105,8 @@ class AnthropicStructuredHandler extends BedrockStructuredHandler
             usage: new Usage(
                 promptTokens: data_get($data, 'usage.input_tokens'),
                 completionTokens: data_get($data, 'usage.output_tokens'),
-                cacheWriteInputTokens: data_get($data, 'usage.cache_creation_input_tokens', null),
-                cacheReadInputTokens: data_get($data, 'usage.cache_read_input_tokens', null)
+                cacheWriteInputTokens: data_get($data, 'usage.cache_creation_input_tokens'),
+                cacheReadInputTokens: data_get($data, 'usage.cache_read_input_tokens')
             ),
             meta: new Meta(
                 id: data_get($data, 'id'),

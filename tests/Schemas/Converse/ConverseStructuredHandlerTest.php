@@ -7,7 +7,7 @@ namespace Tests\Schemas\Converse;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Prism\Bedrock\Enums\BedrockSchema;
-use Prism\Prism\Prism;
+use Prism\Prism\Facades\Prism;
 use Prism\Prism\Schema\BooleanSchema;
 use Prism\Prism\Schema\ObjectSchema;
 use Prism\Prism\Schema\StringSchema;

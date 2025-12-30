@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Http;
 use Prism\Bedrock\Bedrock;
 use Prism\Bedrock\Enums\BedrockSchema;
 use Prism\Prism\Exceptions\PrismException;
-use Prism\Prism\Prism;
+use Prism\Prism\Facades\Prism;
 
 it('registers itself as a provider with prism', function (): void {
     $pendingRequest = Prism::text()->using('bedrock', 'test-model');

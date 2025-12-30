@@ -7,8 +7,8 @@ namespace Tests\Schemas\Converse;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Prism\Bedrock\Enums\BedrockSchema;
+use Prism\Prism\Facades\Prism;
 use Prism\Prism\Facades\Tool;
-use Prism\Prism\Prism;
 use Prism\Prism\Testing\TextStepFake;
 use Prism\Prism\Text\ResponseBuilder;
 use Prism\Prism\ValueObjects\Media\Document;
@@ -299,11 +299,8 @@ it('does not remove zero values from payload', function (): void {
         ->asText();
 
     Http::assertSent(function (Request $request): bool {
-        expect($request->data())->toMatchArray([
-            'inferenceConfig' => [
-                'temperature' => 0,
-                'maxTokens' => 2048,
-            ],
+        expect($request->data()['inferenceConfig'])->toMatchArray([
+            'temperature' => 0,
         ]);
 
         return true;

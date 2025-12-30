@@ -155,6 +155,7 @@ class AnthropicTextHandler extends BedrockTextHandler
             finishReason: $this->tempResponse->finishReason,
             toolCalls: $this->tempResponse->toolCalls,
             toolResults: $toolResults,
+            providerToolCalls: [],
             usage: $this->tempResponse->usage,
             meta: $this->tempResponse->meta,
             messages: $request->messages(),
