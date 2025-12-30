@@ -14,7 +14,7 @@ use Tests\Fixtures\FixtureResponse;
 it('can generate text with a prompt', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/generate-text-with-a-prompt');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withPrompt('Who are you?')
         ->asText();
@@ -33,7 +33,7 @@ it('can generate text with a prompt', function (): void {
 it('can generate text with a system prompt', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/generate-text-with-system-prompt');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withSystemPrompt('MODEL ADOPTS ROLE of [PERSONA: Nyx the Cthulhu]!')
         ->withPrompt('Who are you?')
@@ -62,7 +62,7 @@ it('can generate text using multiple tools and multiple steps', function (): voi
             ->using(fn (string $query): string => 'The tigers game is at 3pm in detroit'),
     ];
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withTools($tools)
         ->withMaxSteps(3)
@@ -102,7 +102,7 @@ it('can generate text using multiple tools and multiple steps', function (): voi
 it('can send images from file', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/generate-text-with-image');
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withMessages([
             new UserMessage(
@@ -146,7 +146,7 @@ it('handles specific tool choice', function (): void {
             ->using(fn (string $query): string => 'The tigers game is at 3pm in detroit'),
     ];
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withPrompt('Do something')
         ->withTools($tools)
@@ -159,7 +159,7 @@ it('handles specific tool choice', function (): void {
 it('can calculate cache usage correctly', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/calculate-cache-usage');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withSystemPrompt(new SystemMessage('Old context'))->withProviderOptions(['cacheType' => 'ephemeral'])
         ->withMessages([
@@ -174,7 +174,7 @@ it('can calculate cache usage correctly', function (): void {
 it('does not enable prompt caching if the enableCaching provider meta is not set on the request', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/generate-text-with-a-prompt');
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withPrompt('Who are you?')
         ->asText();
@@ -185,7 +185,7 @@ it('does not enable prompt caching if the enableCaching provider meta is not set
 it('enables prompt caching if the enableCaching provider meta is set on the request', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/generate-text-with-a-prompt');
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withProviderOptions(['enableCaching' => true])
         ->withPrompt('Who are you?')
@@ -197,7 +197,7 @@ it('enables prompt caching if the enableCaching provider meta is set on the requ
 it('does not remove 0 values from payloads', function (): void {
     FixtureResponse::fakeResponseSequence('invoke', 'anthropic/generate-text-with-a-prompt');
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-haiku-20241022-v1:0')
         ->withPrompt('Who are you?')
         ->usingTemperature(0)

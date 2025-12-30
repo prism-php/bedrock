@@ -14,7 +14,7 @@ it('can generate embeddings from an input', function (): void {
         'X-Amzn-Bedrock-Input-Token-Count' => 4,
     ]);
 
-    $response = (new Prism())->embeddings()
+    $response = (new Prism)->embeddings()
         ->using('bedrock', 'cohere.embed-english-v3')
         ->fromInput('Hello, world!')
         ->asEmbeddings();
@@ -32,7 +32,7 @@ it('can generate embeddings from a file', function (): void {
         'X-Amzn-Bedrock-Input-Token-Count' => 1,
     ]);
 
-    $response = (new Prism())->embeddings()
+    $response = (new Prism)->embeddings()
         ->using('bedrock', 'cohere.embed-english-v3')
         ->fromFile('tests/Fixtures/document.md')
         ->asEmbeddings();
@@ -50,7 +50,7 @@ it('returns multiple embeddings from input', function (): void {
         'X-Amzn-Bedrock-Input-Token-Count' => 1,
     ]);
 
-    $response = (new Prism())->embeddings()
+    $response = (new Prism)->embeddings()
         ->using('bedrock', 'cohere.embed-english-v3')
         ->fromInput('The food was delicious.')
         ->fromInput('The drinks were not so good.')
@@ -70,7 +70,7 @@ it('can set request params', function (): void {
         'X-Amzn-Bedrock-Input-Token-Count' => 4,
     ]);
 
-    $response = (new Prism())->embeddings()
+    $response = (new Prism)->embeddings()
         ->using('bedrock', 'cohere.embed-english-v3')
         ->withProviderOptions([
             'input_type' => 'search_query',

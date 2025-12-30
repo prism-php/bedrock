@@ -19,7 +19,7 @@ use Tests\Fixtures\FixtureResponse;
 it('can generate text with a prompt', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-a-prompt');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
         ->withPrompt('Who are you?')
         ->asText();
@@ -36,7 +36,7 @@ it('can generate text with a prompt', function (): void {
 it('can generate text with reasoning content', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-reasoning-content');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'openai.gpt-oss-120b-1:0')
         ->withPrompt('Tell me a short story about a brave knight.')
         ->asText();
@@ -51,7 +51,7 @@ it('can generate text with reasoning content', function (): void {
 it('can generate text with a system prompt', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-system-prompt');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
         ->withSystemPrompt('MODEL ADOPTS ROLE of [PERSONA: Nyx the Cthulhu]!')
         ->withPrompt('Who are you?')
@@ -67,7 +67,7 @@ it('can generate text with a system prompt', function (): void {
 it('can query a md or txt document', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/query-a-txt-document');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
         ->withMessages([
             new UserMessage(
@@ -89,7 +89,7 @@ it('can query a md or txt document', function (): void {
 it('can query a pdf document', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/query-a-pdf-document');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
         ->withMessages([
             new UserMessage(
@@ -111,7 +111,7 @@ it('can query a pdf document', function (): void {
 it('can send images from file', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-image');
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'anthropic.claude-3-5-sonnet-20241022-v2:0')
         ->withProviderOptions(['apiSchema' => BedrockSchema::Converse])
         ->withMessages([
@@ -145,7 +145,7 @@ it('handles tool calls', function (): void {
             ->using(fn (string $query): string => 'The tigers game is at 3pm in detroit'),
     ];
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'us.amazon.nova-micro-v1:0')
         ->withPrompt('What is the weather like in Detroit today?')
         ->withMaxSteps(2)
@@ -180,7 +180,7 @@ it('handles multiple tool calls', function (): void {
             ->using(fn (string $query): string => 'The tigers game is at 3pm in detroit'),
     ];
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'us.amazon.nova-micro-v1:0')
         ->withPrompt('Where is the tigers game and what will the weather be like?')
         ->withMaxSteps(3)
@@ -205,7 +205,7 @@ it('makes a specific tool choice', function (): void {
             ->using(fn (string $query): string => 'The tigers game is at 3pm in detroit'),
     ];
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'us.amazon.nova-micro-v1:0')
         ->withPrompt('WHat is the weather like in London UK today?')
         ->withTools($tools)
@@ -229,7 +229,7 @@ it('handles a specific tool choice', function (): void {
             ->using(fn (string $query): string => 'The tigers game is at 3pm in detroit'),
     ];
 
-    $response = (new Prism())->text()
+    $response = (new Prism)->text()
         ->using('bedrock', 'us.amazon.nova-micro-v1:0')
         ->withPrompt('WHat is the weather like in London UK today?')
         ->withMaxSteps(2)
@@ -243,7 +243,7 @@ it('handles a specific tool choice', function (): void {
 it('does not enable prompt caching if the enableCaching provider meta is not set on the request', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-a-prompt');
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
         ->withPrompt('Who are you?')
         ->asText();
@@ -254,7 +254,7 @@ it('does not enable prompt caching if the enableCaching provider meta is not set
 it('enables prompt caching if the enableCaching provider meta is set on the request', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-a-prompt');
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
         ->withProviderOptions(['enableCaching' => true])
         ->withPrompt('Who are you?')
@@ -280,7 +280,7 @@ it('maps converse options when set with providerOptions', function (): void {
         'requestMetadata' => ['requestId' => 'abc-123'],
     ];
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'us.amazon.nova-micro-v1:0')
         ->withProviderOptions($providerOptions)
         ->withPrompt('Who are you?')
@@ -292,7 +292,7 @@ it('maps converse options when set with providerOptions', function (): void {
 it('does not remove zero values from payload', function (): void {
     FixtureResponse::fakeResponseSequence('converse', 'converse/generate-text-with-a-prompt');
 
-    (new Prism())->text()
+    (new Prism)->text()
         ->using('bedrock', 'amazon.nova-micro-v1:0')
         ->withPrompt('Who are you?')
         ->usingTemperature(0)
