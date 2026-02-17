@@ -115,7 +115,7 @@ class Bedrock extends Provider
      */
     protected function client(TextRequest|StructuredRequest|EmbeddingRequest $request, array $options = [], array $retry = []): PendingRequest
     {
-        $model = $request->model();
+        $model = rawurlencode($request->model());
 
         $enableCaching = $request instanceof EmbeddingRequest
             ? false
