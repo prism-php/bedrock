@@ -39,7 +39,7 @@
         "pestphp/pest-plugin-laravel": "^4.1",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "rector/rector": "2.2.14",
+        "rector/rector": "^2.4.2",
         "projektgopher/whisky": "^0.7.0",
         "orchestra/testbench": "^9.0|^10.0|^11.0",
         "mockery/mockery": "^1.6",

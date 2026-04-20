@@ -20,7 +20,7 @@ it('can generate embeddings from an input', function (): void {
         ->asEmbeddings();
 
     $embeddings = json_decode(file_get_contents('tests/Fixtures/cohere/generate-embeddings-from-input-1.json'), true);
-    $embeddings = array_map(fn (array $item): Embedding => Embedding::fromArray($item), data_get($embeddings, 'embeddings'));
+    $embeddings = array_map(Embedding::fromArray(...), data_get($embeddings, 'embeddings'));
 
     expect($response->embeddings)->toBeArray();
     expect($response->embeddings[0]->embedding)->toEqual($embeddings[0]->embedding);
@@ -38,7 +38,7 @@ it('can generate embeddings from a file', function (): void {
         ->asEmbeddings();
 
     $embeddings = json_decode(file_get_contents('tests/Fixtures/cohere/generate-embeddings-from-file-1.json'), true);
-    $embeddings = array_map(fn (array $item): Embedding => Embedding::fromArray($item), data_get($embeddings, 'embeddings'));
+    $embeddings = array_map(Embedding::fromArray(...), data_get($embeddings, 'embeddings'));
 
     expect($response->embeddings)->toBeArray();
     expect($response->embeddings[0]->embedding)->toEqual($embeddings[0]->embedding);
@@ -57,7 +57,7 @@ it('returns multiple embeddings from input', function (): void {
         ->asEmbeddings();
 
     $embeddings = json_decode(file_get_contents('tests/Fixtures/cohere/embeddings-from-multiple-inputs-1.json'), true);
-    $embeddings = array_map(fn (array $item): Embedding => Embedding::fromArray($item), data_get($embeddings, 'embeddings'));
+    $embeddings = array_map(Embedding::fromArray(...), data_get($embeddings, 'embeddings'));
 
     expect($response->embeddings)->toBeArray();
     expect($response->embeddings[0]->embedding)->toEqual($embeddings[0]->embedding);
@@ -83,7 +83,7 @@ it('can set request params', function (): void {
         ->asEmbeddings();
 
     $embeddings = json_decode(file_get_contents('tests/Fixtures/cohere/generate-embeddings-from-input-1.json'), true);
-    $embeddings = array_map(fn (array $item): Embedding => Embedding::fromArray($item), data_get($embeddings, 'embeddings'));
+    $embeddings = array_map(Embedding::fromArray(...), data_get($embeddings, 'embeddings'));
 
     Http::assertSent(function ($request): bool {
         $body = $request->data();

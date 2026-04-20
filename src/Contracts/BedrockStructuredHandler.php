@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Prism\Bedrock\Contracts;
 
 use Illuminate\Http\Client\PendingRequest;
