@@ -13,6 +13,7 @@ use Prism\Prism\Enums\Citations\CitationSourcePositionType;
 use Prism\Prism\Enums\Citations\CitationSourceType;
 use Prism\Prism\Enums\FinishReason;
 use Prism\Prism\Enums\StreamEventType;
+use Prism\Prism\Exceptions\PrismException;
 use Prism\Prism\Facades\Prism;
 use Prism\Prism\Facades\Tool;
 use Prism\Prism\Streaming\Events\CitationEvent;
@@ -410,4 +411,23 @@ describe('citations', function (): void {
         expect($lastEvent->citations[0]->citations[0])->toBeInstanceOf(Citation::class);
         expect($lastEvent->finishReason)->toBe(FinishReason::Stop);
     });
+});
+
+it('throws with the full event when a frame has no event type', function (): void {
+    $headers = chr(13).':message-type'.chr(7).pack('n', 9).'exception'
+        .chr(15).':exception-type'.chr(7).pack('n', 10).'mysteryErr';
+    $payload = '{"message":"something unexpected"}';
+    $prelude = pack('N', 16 + strlen($headers) + strlen($payload)).pack('N', strlen($headers));
+    $message = $prelude.pack('N', crc32($prelude)).$headers.$payload;
+    $frame = $message.pack('N', crc32($message));
+
+    Http::fake(['converse-stream' => Http::response($frame, 200)])->preventStrayRequests();
+
+    expect(fn () => iterator_to_array(
+        Prism::text()
+            ->using('bedrock', 'us.amazon.nova-micro-v1:0')
+            ->withProviderOptions(['apiSchema' => BedrockSchema::Converse])
+            ->withPrompt('Who are you?')
+            ->asStream()
+    ))->toThrow(PrismException::class, 'something unexpected');
 });
