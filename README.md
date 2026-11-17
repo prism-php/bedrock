@@ -1,4 +1,4 @@
-# Prism Bedorck
+# Prism Bedrock
 
 > This is a fork of prism bedrock maintained by iseekplant
 
