@@ -4,6 +4,14 @@
 
 Unlock the power of AWS Bedrock services in your Laravel applications with Prism Bedrock. This package provides a standalone Bedrock provider for the Prism PHP framework.
 
+## Tagging a release
+
+Commit with a message prefix to trigger a Statis build,
+
+e.g. `minor: my new feature`
+
+You can then `composer update` from a consuming app. While the releases are pre-1.0 you need to match the minior version constraint.
+
 ## Installation
 
 ```bash
